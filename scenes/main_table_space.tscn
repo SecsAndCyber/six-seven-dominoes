@@ -1,0 +1,89 @@
+[gd_scene load_steps=7 format=3 uid="uid://cwgp03a0dcfxb"]
+
+[ext_resource type="PackedScene" uid="uid://dartuwkh4q1a7" path="res://scenes/domino_block.tscn" id="1_5ildb"]
+
+[sub_resource type="Environment" id="Environment_5ildb"]
+background_energy_multiplier = 10.0
+ambient_light_color = Color(1, 1, 1, 1)
+ambient_light_energy = 10.0
+ssao_enabled = true
+ssil_enabled = true
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_5ildb"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_br6f8"]
+size = Vector3(40, 0.25, 16)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w55pu"]
+albedo_color = Color(0.5264201, 0.3272072, 0.057221487, 1)
+metallic_specular = 0.15
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_5ildb"]
+material = SubResource("StandardMaterial3D_w55pu")
+size = Vector2(40, 16)
+
+[node name="TableSpace" type="Node3D"]
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.26927286, 0.96306396, 0, -0.96306396, 0.26927286, 0, 8.933517, 3.7973814)
+environment = SubResource("Environment_5ildb")
+current = true
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Camera3D"]
+transform = Transform3D(0.41712725, 0.7032206, 0.57574797, -0.75758314, -0.08092095, 0.6477033, 0.50206834, -0.7063516, 0.49899366, 0, 10, 0)
+light_color = Color(0.39308554, 0.3930855, 0.39308548, 1)
+light_energy = 5.0
+shadow_enabled = true
+sky_mode = 1
+
+[node name="TableTop" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.036530018, 0.082410336, -0.19729328)
+physics_material_override = SubResource("PhysicsMaterial_5ildb")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TableTop"]
+shape = SubResource("BoxShape3D_br6f8")
+
+[node name="TableTop2" type="MeshInstance3D" parent="TableTop"]
+mesh = SubResource("PlaneMesh_5ildb")
+skeleton = NodePath("../..")
+
+[node name="Walls" type="Node" parent="TableTop"]
+
+[node name="Wall" type="StaticBody3D" parent="TableTop/Walls"]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0.037, 0.082, -8)
+physics_material_override = SubResource("PhysicsMaterial_5ildb")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TableTop/Walls/Wall"]
+shape = SubResource("BoxShape3D_br6f8")
+
+[node name="Wall2" type="StaticBody3D" parent="TableTop/Walls"]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0.037, 0.082, 8)
+physics_material_override = SubResource("PhysicsMaterial_5ildb")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TableTop/Walls/Wall2"]
+shape = SubResource("BoxShape3D_br6f8")
+
+[node name="Wall3" type="StaticBody3D" parent="TableTop/Walls"]
+transform = Transform3D(-4.371139e-08, -1, 0, -4.371139e-08, 1.9106855e-15, -1, 1, -4.371139e-08, -4.371139e-08, -12, 0.082, 0)
+physics_material_override = SubResource("PhysicsMaterial_5ildb")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TableTop/Walls/Wall3"]
+shape = SubResource("BoxShape3D_br6f8")
+
+[node name="Wall4" type="StaticBody3D" parent="TableTop/Walls"]
+transform = Transform3D(-4.371139e-08, -1, 0, -4.371139e-08, 1.9106855e-15, -1, 1, -4.371139e-08, -4.371139e-08, 12, 0.082, 0)
+physics_material_override = SubResource("PhysicsMaterial_5ildb")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TableTop/Walls/Wall4"]
+shape = SubResource("BoxShape3D_br6f8")
+
+[node name="TopWall" type="StaticBody3D" parent="TableTop/Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.037, 7.657, -0.197)
+physics_material_override = SubResource("PhysicsMaterial_5ildb")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TableTop/Walls/TopWall"]
+shape = SubResource("BoxShape3D_br6f8")
+
+[node name="DominoBlock" parent="TableTop" instance=ExtResource("1_5ildb")]
+transform = Transform3D(-4.371139e-08, -0.99999994, 0, 1, -4.3711385e-08, 0, 0, 0, 0.99999994, 0, 1.5194306, 0)
+rotation_speed = 0.1

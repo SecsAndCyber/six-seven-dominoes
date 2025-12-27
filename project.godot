@@ -11,14 +11,26 @@ config_version=5
 [application]
 
 config/name="SixSevenDominoes"
+run/main_scene="uid://cwgp03a0dcfxb"
 config/features=PackedStringArray("4.5", "GL Compatibility")
 config/icon="res://icon.svg"
+
+[autoload]
+
+InputManager="*res://scripts/input_manager.gd"
 
 [dotnet]
 
 project/assembly_name="SixSevenDominoes"
 
+[input_devices]
+
+sensors/enable_accelerometer=true
+sensors/enable_gravity=true
+sensors/enable_gyroscope=true
+
 [rendering]
 
-renderer/rendering_method="gl_compatibility"
-renderer/rendering_method.mobile="gl_compatibility"
+textures/vram_compression/import_etc2_astc=true
+anti_aliasing/quality/msaa_3d=2
+anti_aliasing/quality/screen_space_aa=2

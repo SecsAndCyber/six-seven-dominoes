@@ -1,3 +1,5 @@
+# Project-specific ignores
+assets/ExportedFbx/
 # Godot 4+ specific ignores
 .godot/
 /android/
@@ -15,3 +17,24 @@ export_credentials.cfg
 .mono/
 data_*/
 mono_crash.*.json
+
+# Platform-specific ignores
+.import/
+*.import
+export_presets.cfg
+/.godot/
+.mono/
+.vscode/
+.idea/
+build/
+android/build/
+android/.gradle/
+android/*.apk
+android/*.aab
+ios/build/
+*.keystore
+keystore/
+*.p12
+*.mobileprovision
+*.xcarchive
+.DS_Store

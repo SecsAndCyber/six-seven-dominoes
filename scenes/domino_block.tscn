@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://dartuwkh4q1a7"]
+
+[ext_resource type="Script" uid="uid://bvr5gwfuuigoy" path="res://scripts/domino_block.gd" id="2_p14fe"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_u0dsp"]
+size = Vector3(0.43, 3.95, 2)
+
+[node name="DominoBlock" type="RigidBody3D"]
+script = ExtResource("2_p14fe")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0016174316, 0.0021362305, 0)
+shape = SubResource("BoxShape3D_u0dsp")
+
+[node name="MeshContainer" type="Node3D" parent="."]
+transform = Transform3D(1.0000001, 0, 0, 0, -0.9999999, 8.74228e-08, 0, -8.742277e-08, -1.0000002, 0, 0, 0)

@@ -1,4 +1,5 @@
-@tool
+# @tool
+class_name DominoBlock
 extends RigidBody3D
 
 @export_range(0,7) var value_t: int = 5:
@@ -20,7 +21,7 @@ extends RigidBody3D
 			face = val
 			
 @export var rolling_force: float = 10
-var mesh_container: Node3D
+var mesh_container: Node3D = null
 var start_flip: String = ""
 @export var rotation_speed: float = .5
 
@@ -75,34 +76,44 @@ func _process(delta: float) -> void:
 		return
 	
 	if not start_flip == "":
-		if start_flip == "down" and mesh_container.rotation.y < PI:
-			mesh_container.rotation.y = clampf(
-				rotation_speed + mesh_container.rotation.y, 0, PI)
-			if mesh_container.rotation.y >= PI:
-				start_flip = ""
-		if start_flip == "up" and mesh_container.rotation.y > 0:
-			mesh_container.rotation.y = clampf(
-				mesh_container.rotation.y - rotation_speed, 0, PI)
-			if mesh_container.rotation.y <= 0:
-				start_flip = ""
-		print("Rotate toward ", start_flip, " ", mesh_container.rotation.y)
+		if start_flip == "down":
+			if mesh_container.rotation.y < PI:
+				mesh_container.rotation.y = clampf(
+					rotation_speed + mesh_container.rotation.y, 0, PI)
+				if mesh_container.rotation.y >= PI - 0.0001:
+					start_flip = "" if start_flip == face else face
+			else:
+					start_flip = "" if start_flip == face else face
+		if start_flip == "up":
+			if mesh_container.rotation.y > 0:
+				mesh_container.rotation.y = clampf(
+					mesh_container.rotation.y - rotation_speed, 0, PI)
+				if mesh_container.rotation.y <= 0 + 0.0001:
+					start_flip = "" if start_flip == face else face
+			else:
+				start_flip = "" if start_flip == face else face
 	
 func _physics_process(_delta):
 	# If we are in the editor, stop here and don't run physics logic
 	if Engine.is_editor_hint():
 		return
-# 1. Get the tilt data from your Global Singleton
-	var tilt = InputManager.tilt_vector
+
+var last_touch_time: int = 0
+const TOUCH_DELAY_MS: int = 100 # .1 second in milliseconds
+func touched():
+	var current_time = Time.get_ticks_msec()
+	# Check if enough time has passed
+	if current_time - last_touch_time < TOUCH_DELAY_MS:
+		return # Exit early if called too soon
+	if not start_flip == "":
+		return # Turning domino was clicked
+	# Update the timestamp for the next valid touch
+	last_touch_time = current_time
 	
-	# 2. Map the Tilt to World Coordinates
-	# On a phone held in Portrait:
-	# Tilt X (left/right) -> World X
-	# Tilt Y (forward/back) -> World Z
-	# We use -tilt.y because tilting the phone forward (positive Y in sensors) 
-	# should move the ball away from you (negative Z in Godot).
-	var move_direction = Vector3(tilt.x, 0, -tilt.y)
-	
-	# 3. Apply the force
-	if move_direction.length() > 0.1:
-		# We use 'apply_central_force' for continuous rolling movement
-		apply_central_force(move_direction * rolling_force)
+	print("Touched ", face, " on ", self, " to test ", GameManager.get_capture_point())
+	if GameManager.get_capture_point():
+		if GameManager.get_capture_point().collectable:
+			if GameManager.get_capture_point().test_collection(self):
+				GameManager.get_capture_point().collect_new_domino(self)
+			else:
+				start_flip = "down" if face == "up" else "up"

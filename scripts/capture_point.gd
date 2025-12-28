@@ -1,0 +1,160 @@
+class_name CapturePoint
+extends Node3D
+
+@onready var active_block: DominoBlock = $DominoBlock
+var moving_block: DominoBlock = null
+@onready var float_point: Node3D = $FloatPoint
+
+@export_range(0,7) var value_t: int = 5
+@export_range(0,7) var value_b: int = 5
+@export_enum("default") var skin: String = "default"
+@export var collection_speed : float = 5
+var rotation_tween = null
+var rotated: bool = false
+var incoming_from_hand: bool = false
+var set_from_hand: bool = true
+var single_value: bool = false
+var current_values: Dictionary = {}
+
+var collectable: bool :
+	get():
+		if active_block == null:
+			return false
+		if not moving_block == null:
+			return false
+		return true
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	GameManager.active_capture_point = self
+	active_block.value_t = value_t
+	active_block.value_b = value_b
+	active_block.skin = skin
+	current_values = {
+		active_block.value_b: true,
+		active_block.value_t: true
+	}
+
+func _exit_tree() -> void:
+	if GameManager.active_capture_point == self:
+		GameManager.active_capture_point = null
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	if not active_block == null:
+		setup_active_block()
+	else:
+		active_block = find_child("*", true, false) as DominoBlock
+	if not moving_block == null:
+		move_block_toward_capture(delta)
+
+func setup_active_block():
+	active_block.freeze = true
+	active_block.set_collision_layer_value(1, false)
+	active_block.rotation = compute_block_rotation(active_block)
+	
+func compute_block_rotation(db: DominoBlock):
+	if db==active_block:
+		if db.value_t == db.value_b:
+			return Vector3(0, 0, PI/2)
+		elif set_from_hand and db==active_block:
+			return Vector3(0, 0, PI/2)
+		elif single_value and db==active_block:
+			if db.value_t in current_values:
+				return Vector3(0, -PI/2, PI/2)
+			else:
+				return Vector3(0, PI/2, PI/2)
+	elif not db==active_block:
+		if db.value_b in current_values and\
+			db.value_t in current_values:
+				return Vector3(0, 0, PI/2)
+		elif db.value_t in current_values:
+			return Vector3(0, PI/2, PI/2)
+		else:
+			return Vector3(0, -PI/2, PI/2)
+	
+var moved_to_float_point: bool = false
+func move_block_toward_capture(delta: float):
+	moving_block.freeze = true
+	
+	var destination: Node3D = self if moved_to_float_point else float_point
+	print(destination, float_point.global_transform.origin)
+	if moving_block.global_transform.origin.y < float_point.global_transform.origin.y:
+		moving_block.global_transform.origin.y = clampf(
+			moving_block.global_transform.origin.y + collection_speed * delta,
+			.25,
+			float_point.global_transform.origin.y
+		)
+	else:
+		if rotation_tween == null:
+			rotation_tween = create_tween()
+			var target_rotation = Quaternion.from_euler(
+									compute_block_rotation(moving_block)
+								)
+			rotation_tween.tween_property(moving_block, "quaternion", target_rotation, 0.5)\
+				.set_trans(Tween.TRANS_BACK)\
+				.set_ease(Tween.EASE_OUT)
+			rotation_tween.finished.connect(func(): rotated = true)
+		if moving_block.global_transform.origin.x < destination.global_transform.origin.x:
+			moving_block.global_transform.origin.x = clampf(
+				moving_block.global_transform.origin.x + collection_speed * delta,
+				moving_block.global_transform.origin.x,
+				destination.global_transform.origin.x
+			)
+		if moving_block.global_transform.origin.z < destination.global_transform.origin.z:
+			moving_block.global_transform.origin.z = clampf(
+				moving_block.global_transform.origin.z + collection_speed * delta,
+				moving_block.global_transform.origin.z,
+				destination.global_transform.origin.z
+			)
+	if (moving_block.global_transform.origin.x == float_point.global_transform.origin.x and
+		moving_block.global_transform.origin.z == float_point.global_transform.origin.z):
+		moved_to_float_point = true
+	if (moving_block.global_transform.origin.x == global_transform.origin.x and
+		moving_block.global_transform.origin.z == global_transform.origin.z):
+			active_block.value_t = moving_block.value_t
+			active_block.value_b = moving_block.value_b
+			rotation_tween = null
+			var next_values = {
+				active_block.value_b: true,
+				active_block.value_t: true
+			}
+			set_from_hand = incoming_from_hand
+			if incoming_from_hand:
+				single_value = false
+				incoming_from_hand = false
+				current_values = next_values
+			else:
+				single_value = not next_values.size() == 1
+				if single_value:
+					for key in current_values:
+						if key in next_values:
+							next_values.erase(key)
+				current_values = next_values
+			moving_block.visible = false
+			moving_block = GameManager.remove_domino(moving_block)
+
+func test_collection(db : DominoBlock) -> bool:
+	if not collectable:
+		# Cannot collect while animating
+		return false
+	var incoming_values = {
+		db.value_b: true,
+		db.value_t: true
+	}
+	for key in current_values:
+		if key in incoming_values:
+			return true
+	return false
+
+func collect_new_domino(db : DominoBlock, adding_from_hand: bool = false) -> void:
+	incoming_from_hand = adding_from_hand
+	moved_to_float_point = adding_from_hand
+	db.set_collision_layer_value(1, false)
+	var gt = db.global_transform
+	db.get_parent().remove_child(db)
+	add_child(db)
+	db.global_transform = gt
+	moving_block = db
+	rotation_tween = null
+	rotated = false
+	print("Collecting ", db)

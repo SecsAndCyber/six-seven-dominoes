@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://dhamkvtbdtbed"]
+
+[ext_resource type="Script" uid="uid://cyxp3t577f4n" path="res://scripts/capture_point.gd" id="1_2d7m5"]
+[ext_resource type="PackedScene" uid="uid://dartuwkh4q1a7" path="res://scenes/domino_block.tscn" id="2_wd0k0"]
+
+[node name="CapturePoint" type="Node3D"]
+script = ExtResource("1_2d7m5")
+
+[node name="DominoBlock" parent="." instance=ExtResource("2_wd0k0")]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0.5)
+
+[node name="FloatPoint" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -6)

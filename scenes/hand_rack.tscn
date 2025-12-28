@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=3 uid="uid://kb6wm8lyrkvh"]
+
+[ext_resource type="Script" uid="uid://brm41lvocr1h8" path="res://scripts/hand_rack.gd" id="1_p8fat"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_6iyva"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6iyva"]
+albedo_color = Color(0.4053837, 0.22774413, 0.06097856, 1)
+
+[node name="StaticBody3D" type="StaticBody3D"]
+collision_layer = 5
+collision_mask = 15
+physics_material_override = SubResource("PhysicsMaterial_6iyva")
+script = ExtResource("1_p8fat")
+
+[node name="CollisionShape3D" type="CollisionPolygon3D" parent="."]
+depth = 10.0
+polygon = PackedVector2Array(5, 0, 5, 3, 2, 1, 0, 1, -0.75, 1.5, -1.75, 1.5, -1.75, 0)
+
+[node name="CSGPolygon3D" type="CSGPolygon3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
+polygon = PackedVector2Array(-0.75, 1.5, 0, 1, 2, 1, 5, 3, 5, 0, -1.75, 0, -1.75, 1.5)
+depth = 10.0
+material = SubResource("StandardMaterial3D_6iyva")
+
+[node name="FloatPoint" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 4, 0)

@@ -25,9 +25,12 @@ var collectable: bool :
 		return true
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	GameManager.active_capture_point = self
 	active_block.value_t = value_t
 	active_block.value_b = value_b
+	init()
+
+func init() -> void:
+	GameManager.active_capture_point = self
 	active_block.skin = skin
 	current_values = {
 		active_block.value_b: true,

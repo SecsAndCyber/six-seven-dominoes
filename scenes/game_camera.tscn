@@ -11,6 +11,8 @@ ssil_enabled = true
 transform = Transform3D(1, 0, 0, 0, 0.26927286, 0.96306396, 0, -0.96306396, 0.26927286, 0, 0, 0)
 environment = SubResource("Environment_5ildb")
 current = true
+near = 1.0
+far = 100.0
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.41712725, 0.7032206, 0.57574797, -0.75758314, -0.08092095, 0.6477033, 0.50206834, -0.7063516, 0.49899366, 0, 10, 0)

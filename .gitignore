@@ -4,6 +4,7 @@ assets/ExportedFbx/
 # Godot 4+ specific ignores
 .godot/
 /android/
+/android.mono/
 .nomedia
 
 # Godot-specific ignores
@@ -27,7 +28,6 @@ scenes/dominos/default/Domino.*.tscn
 # Platform-specific ignores
 .import/
 *.import
-export_presets.cfg
 /.godot/
 .mono/
 .vscode/

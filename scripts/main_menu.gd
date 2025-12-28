@@ -22,8 +22,11 @@ func _input(event):
 		if event is InputEventMouseButton or event is InputEventScreenTouch:
 			if event.is_pressed():
 				change_menu(menu_a)
-	elif menu_a.visible and event.is_pressed():
-		get_tree().change_scene_to_file("res://scenes/main_table_space.tscn")
+	elif menu_a.visible:
+		if event is InputEventMouseButton or event is InputEventScreenTouch:
+			if event.is_pressed():
+				print(event)
+				get_tree().change_scene_to_file("res://scenes/main_table_space.tscn")
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:

@@ -23,7 +23,7 @@ extends RigidBody3D
 @export var rolling_force: float = 10
 var mesh_container: Node3D = null
 var start_flip: String = ""
-@export var rotation_speed: float = .5
+@export var rotation_speed: float = 25
 @onready var area_3d: Area3D = $Area3D
 var dominos_in_zone: Dictionary = {} # Using a Dictionary as a Set
 
@@ -90,7 +90,7 @@ func _process(delta: float) -> void:
 		if start_flip == "down":
 			if mesh_container.rotation.y < PI:
 				mesh_container.rotation.y = clampf(
-					rotation_speed + mesh_container.rotation.y, 0, PI)
+					delta * rotation_speed + mesh_container.rotation.y, 0, PI)
 				if mesh_container.rotation.y >= PI - 0.0001:
 					start_flip = "" if start_flip == face else face
 			else:
@@ -98,7 +98,7 @@ func _process(delta: float) -> void:
 		if start_flip == "up":
 			if mesh_container.rotation.y > 0:
 				mesh_container.rotation.y = clampf(
-					mesh_container.rotation.y - rotation_speed, 0, PI)
+					mesh_container.rotation.y - delta * rotation_speed, 0, PI)
 				if mesh_container.rotation.y <= 0 + 0.0001:
 					start_flip = "" if start_flip == face else face
 			else:
@@ -142,6 +142,8 @@ func under_dominos() -> bool:
 func _on_area_3d_body_exited(body: Node3D) -> void:
 	if not under_dominos():
 		face = "up"
+	else:
+		face = "down"
 
 
 func _on_area_3d_body_entered(body: Node3D) -> void:

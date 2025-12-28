@@ -36,6 +36,7 @@ collision_layer = 0
 freeze = true
 value_t = 7
 value_b = 6
+rotation_speed = 0.5
 
 [node name="MenuA" type="Node3D" parent="Camera3D"]
 
@@ -45,6 +46,7 @@ collision_layer = 0
 freeze = true
 value_t = 0
 value_b = 1
+rotation_speed = 0.5
 
 [node name="Label3D" type="Label3D" parent="Camera3D/MenuA/DominoBlock"]
 transform = Transform3D(-0.0101638585, 0.2872744, 0.957794, -0.9996451, 0.020667449, -0.016806832, -0.02462338, -0.95762503, 0.28696233, 0.226076, -7.92217, 0.3882466)
@@ -57,6 +59,7 @@ collision_layer = 0
 freeze = true
 value_t = 0
 value_b = 2
+rotation_speed = 0.5
 
 [node name="Label3D" type="Label3D" parent="Camera3D/MenuA/DominoBlock2"]
 transform = Transform3D(-0.0101638585, 0.2872744, 0.957794, -0.9996451, 0.020667449, -0.016806832, -0.02462338, -0.95762503, 0.28696233, 0.28908834, -7.4962, 0.20287864)
@@ -69,6 +72,7 @@ collision_layer = 0
 freeze = true
 value_t = 0
 value_b = 3
+rotation_speed = 0.5
 
 [node name="Label3D" type="Label3D" parent="Camera3D/MenuA/DominoBlock3"]
 transform = Transform3D(-0.0101638585, 0.2872744, 0.957794, -0.9996451, 0.020667449, -0.016806832, -0.02462338, -0.95762503, 0.28696233, 0.37776697, -6.7580833, -0.04987392)
@@ -83,6 +87,7 @@ collision_layer = 0
 freeze = true
 value_t = 0
 value_b = 1
+rotation_speed = 0.5
 
 [node name="Label3D" type="Label3D" parent="Camera3D/MenuAbout/DominoBlock"]
 transform = Transform3D(-0.0101638585, 0.2872744, 0.957794, -0.9996451, 0.020667449, -0.016806832, -0.02462338, -0.95762503, 0.28696233, 0.226076, -7.92217, 0.3882466)
@@ -95,6 +100,7 @@ collision_layer = 0
 freeze = true
 value_t = 0
 value_b = 2
+rotation_speed = 0.5
 
 [node name="Label3D" type="Label3D" parent="Camera3D/MenuAbout/DominoBlock2"]
 transform = Transform3D(-0.0101638585, 0.2872744, 0.957794, -0.9996451, 0.020667449, -0.016806832, -0.02462338, -0.95762503, 0.28696233, 0.28908834, -7.4962, 0.20287864)
@@ -107,6 +113,7 @@ collision_layer = 0
 freeze = true
 value_t = 0
 value_b = 3
+rotation_speed = 0.5
 
 [node name="Label3D" type="Label3D" parent="Camera3D/MenuAbout/DominoBlock3"]
 transform = Transform3D(-0.0101638585, 0.2872744, 0.957794, -0.9996451, 0.020667449, -0.016806832, -0.02462338, -0.95762503, 0.28696233, 0.37776697, -6.7580833, -0.04987392)

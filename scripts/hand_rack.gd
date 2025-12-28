@@ -1,6 +1,6 @@
 extends StaticBody3D
 
-var dominoes_in_hand:Array = []
+var dominos_in_hand:Array = []
 var domino_drawn: DominoBlock = null
 @export var collection_speed : float = 0.10
 @onready var float_point: Node3D = $FloatPoint
@@ -28,13 +28,13 @@ func _ready() -> void:
 	for child in get_children():
 		if child is DominoBlock:
 			print(child, child.transform.origin)
-			dominoes_in_hand.append(child)
+			dominos_in_hand.append(child)
 
 func _process(delta: float) -> void:
 	if not domino_drawn == null:
 		if domino_drawn.global_transform.origin.y < float_point.global_transform.origin.y:
 			domino_drawn.global_transform.origin.y = clampf(
-				domino_drawn.global_transform.origin.y + collection_speed,
+				domino_drawn.global_transform.origin.y + collection_speed * delta,
 				.25,
 				float_point.global_transform.origin.y
 			)
@@ -43,7 +43,7 @@ func _process(delta: float) -> void:
 		if lifted and rotated:
 			if domino_drawn.global_transform.origin.z > float_point.global_transform.origin.z:
 				domino_drawn.global_transform.origin.z = clampf(
-					domino_drawn.global_transform.origin.z - collection_speed,
+					domino_drawn.global_transform.origin.z - collection_speed * delta,
 					float_point.global_transform.origin.z,
 					domino_drawn.global_transform.origin.z
 				)
@@ -67,5 +67,5 @@ func touched():
 	last_touch_time = current_time
 	if GameManager.get_capture_point():
 		if GameManager.get_capture_point().collectable:
-			if dominoes_in_hand.size():
-				start_setting_domino(dominoes_in_hand.pop_back())
+			if dominos_in_hand.size():
+				start_setting_domino(dominos_in_hand.pop_back())

@@ -18,6 +18,8 @@ func get_active_camera() -> Camera3D:
 	return get_viewport().get_camera_3d()
 
 func _perform_raycast(screen_pos: Vector2) -> void:
+	if get_viewport() == null: return
+	if get_active_camera() == null: return
 	# 1. Calculate the start and end points of the ray
 	var ray_origin = get_active_camera().project_ray_origin(screen_pos)
 	var ray_end = ray_origin + get_active_camera().project_ray_normal(screen_pos) * 2000.0 # Length of ray
@@ -26,7 +28,7 @@ func _perform_raycast(screen_pos: Vector2) -> void:
 	var space_state = get_active_camera().get_world_3d().direct_space_state
 	var query = PhysicsRayQueryParameters3D.create(ray_origin, ray_end)
 	
-	# Only hit dominoes on a specific layer (e.g., Layer 1, Clickable)
+	# Only hit dominos on a specific layer (e.g., Layer 1, Clickable)
 	query.collision_mask = 1
 
 	# 3. Cast the ray
@@ -36,7 +38,7 @@ func _perform_raycast(screen_pos: Vector2) -> void:
 	if result:
 		var hit_object = result.collider
 		
-		# Check if the hit object is one of your dominoes
+		# Check if the hit object is one of your dominos
 		if hit_object is PhysicsBody3D and hit_object.has_method("touched"):
 			hit_object.touched()
 			print("Pushed: ", hit_object.name)

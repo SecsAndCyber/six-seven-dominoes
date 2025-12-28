@@ -77,13 +77,12 @@ func move_block_toward_capture(delta: float):
 	moving_block.freeze = true
 	
 	var destination: Node3D = self if moved_to_float_point else float_point
-	print(destination, float_point.global_transform.origin)
-	if moving_block.global_transform.origin.y < float_point.global_transform.origin.y:
-		moving_block.global_transform.origin.y = clampf(
-			moving_block.global_transform.origin.y + collection_speed * delta,
-			.25,
-			float_point.global_transform.origin.y
-		)
+	if not moved_to_float_point and moving_block.global_transform.origin.y < float_point.global_transform.origin.y:
+		moving_block.global_transform.origin.y = move_toward(
+				moving_block.global_transform.origin.y,
+				destination.global_transform.origin.y,
+				collection_speed * delta
+			)
 	else:
 		if rotation_tween == null:
 			rotation_tween = create_tween()
@@ -94,18 +93,30 @@ func move_block_toward_capture(delta: float):
 				.set_trans(Tween.TRANS_BACK)\
 				.set_ease(Tween.EASE_OUT)
 			rotation_tween.finished.connect(func(): rotated = true)
-		if moving_block.global_transform.origin.x < destination.global_transform.origin.x:
-			moving_block.global_transform.origin.x = clampf(
-				moving_block.global_transform.origin.x + collection_speed * delta,
-				moving_block.global_transform.origin.x,
-				destination.global_transform.origin.x
+		if absf(moving_block.global_transform.origin.x - destination.global_transform.origin.x) > .01:
+			moving_block.global_transform.origin.x = move_toward(
+				moving_block.global_transform.origin.x, 
+				destination.global_transform.origin.x, 
+				collection_speed * delta
 			)
-		if moving_block.global_transform.origin.z < destination.global_transform.origin.z:
-			moving_block.global_transform.origin.z = clampf(
-				moving_block.global_transform.origin.z + collection_speed * delta,
-				moving_block.global_transform.origin.z,
-				destination.global_transform.origin.z
+		else:
+			moving_block.global_transform.origin.x = destination.global_transform.origin.x
+		if absf(moving_block.global_transform.origin.z - destination.global_transform.origin.z) > .01:
+			moving_block.global_transform.origin.z = move_toward(
+				moving_block.global_transform.origin.z, 
+				destination.global_transform.origin.z, 
+				collection_speed * delta
 			)
+		else:
+			moving_block.global_transform.origin.z = destination.global_transform.origin.z
+		if absf(moving_block.global_transform.origin.y - float_point.global_transform.origin.y) > .01:
+			moving_block.global_transform.origin.y = move_toward(
+				moving_block.global_transform.origin.y, 
+				float_point.global_transform.origin.y,
+				collection_speed * delta
+			)
+		else:
+			moving_block.global_transform.origin.y = float_point.global_transform.origin.y
 	if (moving_block.global_transform.origin.x == float_point.global_transform.origin.x and
 		moving_block.global_transform.origin.z == float_point.global_transform.origin.z):
 		moved_to_float_point = true
@@ -148,7 +159,7 @@ func test_collection(db : DominoBlock) -> bool:
 
 func collect_new_domino(db : DominoBlock, adding_from_hand: bool = false) -> void:
 	incoming_from_hand = adding_from_hand
-	moved_to_float_point = adding_from_hand
+	moved_to_float_point = false
 	db.set_collision_layer_value(1, false)
 	var gt = db.global_transform
 	db.get_parent().remove_child(db)
@@ -157,4 +168,3 @@ func collect_new_domino(db : DominoBlock, adding_from_hand: bool = false) -> voi
 	moving_block = db
 	rotation_tween = null
 	rotated = false
-	print("Collecting ", db)

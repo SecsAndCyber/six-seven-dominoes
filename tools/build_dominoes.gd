@@ -4,14 +4,14 @@ extends EditorScript
 #Build domino scenes by creating a child MeshInstance3D on
 #`res://scenes/domino_block.tscn` for each FBX in
 #`res://assets/ExportedFbx/`, saving results to
-#`res://scenes/dominoes/default/`.
+#`res://scenes/dominos/default/`.
 #
 #Run from the Godot Editor (Script -> Run) or attach to an EditorPlugin.
 #*/
 
 func _run():
 	var src_dir := "res://assets/ExportedFbx"
-	var out_dir := "res://scenes/dominoes/default"
+	var out_dir := "res://scenes/dominos/default"
 	var block_path := "res://scenes/domino_block.tscn"
 	
 	var block_res = ResourceLoader.load(block_path)
@@ -87,7 +87,7 @@ func _run():
 		file_name = dir.get_next()
 
 	dir.list_dir_end()
-	print("build_dominoes: done")
+	print("build_dominos: done")
 
 
 func _find_mesh_in_node(node):

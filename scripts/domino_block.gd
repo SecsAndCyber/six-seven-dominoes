@@ -41,7 +41,6 @@ func _ready() -> void:
 	start_flip = ""
 
 func update_domino_look():
-	print("update_domino_look")
 	if not is_inside_tree(): 
 		return
 	if mesh_container == null:
@@ -59,7 +58,6 @@ func update_domino_look():
 	var scene_path = "res://scenes/dominos/%s/Domino.%d.%d.tscn" % [skin, a, b]
 	
 	if ResourceLoader.exists(scene_path):
-		print("Loading: domino file: ", scene_path)
 		var scene = ResourceLoader.load(scene_path)
 		if scene:
 			var instance = scene.instantiate()
@@ -139,12 +137,12 @@ func under_dominos() -> bool:
 				return true
 	return false
 
-func _on_area_3d_body_exited(body: Node3D) -> void:
+func _on_area_3d_body_exited(_body: Node3D) -> void:
 	if not under_dominos():
 		face = "up"
 	else:
 		face = "down"
 
 
-func _on_area_3d_body_entered(body: Node3D) -> void:
+func _on_area_3d_body_entered(_body: Node3D) -> void:
 	pass

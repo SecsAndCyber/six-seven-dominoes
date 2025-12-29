@@ -21,6 +21,7 @@ size = Vector2(40, 16)
 
 [node name="TableSpace" type="Node3D"]
 script = ExtResource("1_ltvlf")
+next_level = "res://scenes/levels/level_2.tscn"
 
 [node name="CapturePoint" parent="." instance=ExtResource("1_v573t")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5219994, 0.25, 6.5)
@@ -44,14 +45,14 @@ mesh = SubResource("PlaneMesh_5ildb")
 skeleton = NodePath("../..")
 
 [node name="DominoBlock" parent="TableTop" instance=ExtResource("1_5ildb")]
-transform = Transform3D(-4.371139e-08, -0.99999994, 0, 1, -4.3711385e-08, 0, 0, 0, 0.99999994, -0.16739777, 0.7945981, 0)
+transform = Transform3D(-4.371139e-08, -0.99999994, 0, 1, -4.3711385e-08, 0, 0, 0, 0.99999994, 0.961514, 0.7945981, 0)
 
 [node name="DominoBlock2" parent="TableTop" instance=ExtResource("1_5ildb")]
-transform = Transform3D(-4.371139e-08, -0.99999994, 0, 1, -4.3711385e-08, 0, 0, 0, 0.99999994, 4.48, 0.795, 0)
+transform = Transform3D(-4.371139e-08, -0.99999994, 0, 1, -4.3711385e-08, 0, 0, 0, 0.99999994, 5.6876745, 0.795, 0)
 value_t = 3
 
 [node name="DominoBlock3" parent="TableTop" instance=ExtResource("1_5ildb")]
-transform = Transform3D(-4.371139e-08, -0.99999994, 0, 1, -4.3711385e-08, 0, 0, 0, 0.99999994, -4.5401435, 0.79459786, 0)
+transform = Transform3D(-4.371139e-08, -0.99999994, 0, 1, -4.3711385e-08, 0, 0, 0, 0.99999994, -3.8312898, 0.79459786, 0)
 value_t = 7
 
 [node name="DominoBlock4" parent="TableTop" instance=ExtResource("1_5ildb")]
@@ -76,6 +77,11 @@ face = "down"
 
 [node name="DominoBlock8" parent="TableTop" instance=ExtResource("1_5ildb")]
 transform = Transform3D(2.80633e-09, 0.06420142, -0.99793684, 1, -4.3711385e-08, 0, -4.3621206e-08, -0.99793684, -0.06420142, 4.5177083, 0.31077933, 0)
+value_t = 7
+face = "down"
+
+[node name="DominoBlock9" parent="TableTop" instance=ExtResource("1_5ildb")]
+transform = Transform3D(2.80633e-09, 0.06420142, -0.99793684, 1, -4.3711385e-08, 0, -4.3621206e-08, -0.99793684, -0.06420142, 6.644267, 0.31077933, 0)
 value_t = 7
 face = "down"
 

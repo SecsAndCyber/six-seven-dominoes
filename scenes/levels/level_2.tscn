@@ -21,6 +21,7 @@ size = Vector2(40, 16)
 
 [node name="TableSpace" type="Node3D"]
 script = ExtResource("1_6761a")
+next_level = "res://scenes/levels/level_3.tscn"
 
 [node name="CapturePoint" parent="." instance=ExtResource("2_sk5k4")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5219994, 0.25, 6.5)
@@ -71,19 +72,9 @@ face = "down"
 transform = Transform3D(2.5861943e-10, 0.0059166052, 0.9999826, 1, -4.371139e-08, -6.735088e-18, 4.3710624e-08, 0.9999826, -0.0059166052, -4.167398, 0.36073935, 0)
 face = "down"
 
-[node name="DominoBlock9" parent="TableTop" instance=ExtResource("4_s8va5")]
-transform = Transform3D(2.5861943e-10, 0.0059166052, 0.9999826, 1, -4.371139e-08, -6.735088e-18, 4.3710624e-08, 0.9999826, -0.0059166052, -4.167398, 0.36073935, -4.0344505)
-
-[node name="DominoBlock10" parent="TableTop" instance=ExtResource("4_s8va5")]
-transform = Transform3D(2.5861943e-10, 0.0059166052, 0.9999826, 1, -4.371139e-08, -6.735088e-18, 4.3710624e-08, 0.9999826, -0.0059166052, 3.832602, 0.36073935, 0)
-face = "down"
-
 [node name="DominoBlock11" parent="TableTop" instance=ExtResource("4_s8va5")]
 transform = Transform3D(2.5861943e-10, 0.0059166052, 0.9999826, 1, -4.371139e-08, -6.735088e-18, 4.3710624e-08, 0.9999826, -0.0059166052, 3.832602, 0.36073935, -4.0344505)
 face = "down"
-
-[node name="DominoBlock3" parent="TableTop" instance=ExtResource("4_s8va5")]
-transform = Transform3D(-4.3710624e-08, -0.99998254, 0.005916561, 1, -4.371139e-08, 1.4284605e-17, 2.586139e-10, 0.005916561, 0.99998254, -0.16739777, 0.36073935, 3.0789206)
 
 [node name="DominoBlock12" parent="TableTop" instance=ExtResource("4_s8va5")]
 transform = Transform3D(-2.195011e-08, -0.50215995, 0.8647749, 1, -4.3711395e-08, -3.842883e-15, 3.7800508e-08, 0.8647749, 0.50215995, 1.7520664, 0.86921537, -4.413184)
@@ -99,9 +90,6 @@ face = "down"
 
 [node name="DominoBlock17" parent="TableTop" instance=ExtResource("4_s8va5")]
 transform = Transform3D(-1.0909671e-10, -0.0024958253, 0.99999696, 1, -4.3711385e-08, -1.7718986e-15, 4.3711243e-08, 0.99999696, 0.0024958253, 2.2474205, 1.4114155, -3.4200795)
-
-[node name="DominoBlock18" parent="TableTop" instance=ExtResource("4_s8va5")]
-transform = Transform3D(-1.0909671e-10, -0.0024958253, 0.99999696, 1, -4.3711385e-08, -1.7718986e-15, 4.3711243e-08, 0.99999696, 0.0024958253, 0.10137701, 1.4114155, -2.1324527)
 
 [node name="DominoBlock19" parent="TableTop" instance=ExtResource("4_s8va5")]
 transform = Transform3D(-1.0909671e-10, -0.0024958253, 0.99999696, 1, -4.3711385e-08, -1.7718986e-15, 4.3711243e-08, 0.99999696, 0.0024958253, -2.2007432, 1.4114155, -0.9618828)

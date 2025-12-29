@@ -27,7 +27,3 @@ func _input(event):
 			if event.is_pressed():
 				print(event)
 				get_tree().change_scene_to_file("res://scenes/main_table_space.tscn")
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass

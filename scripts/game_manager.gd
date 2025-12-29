@@ -24,8 +24,3 @@ func prepare_level() -> void:
 	level_complete = false
 	board_dominos = []
 	hand_dominos = []
-	
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass

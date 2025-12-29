@@ -15,6 +15,7 @@ func _ready() -> void:
 	for db in find_children("*", "DominoBlock", true, true):
 		db.freeze = true
 		db.set_collision_layer_value(1, false)
+		GameManager.board_dominos.append(db)
 	change_menu(splash)
 
 func _input(event):
@@ -25,5 +26,4 @@ func _input(event):
 	elif menu_a.visible:
 		if event is InputEventMouseButton or event is InputEventScreenTouch:
 			if event.is_pressed():
-				print(event)
-				get_tree().change_scene_to_file("res://scenes/main_table_space.tscn")
+				GameManager.advance_to_level("res://scenes/main_table_space.tscn")

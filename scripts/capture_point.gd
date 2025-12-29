@@ -5,9 +5,6 @@ extends Node3D
 var moving_block: DominoBlock = null
 @onready var float_point: Node3D = $FloatPoint
 
-@export_range(0,7) var value_t: int = 5
-@export_range(0,7) var value_b: int = 5
-@export_enum("default") var skin: String = "default"
 @export var collection_speed : float = 5
 var rotation_tween = null
 var rotated: bool = false
@@ -25,13 +22,11 @@ var collectable: bool :
 		return true
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	active_block.value_t = value_t
-	active_block.value_b = value_b
-	init()
+	pass
 
 func init() -> void:
 	GameManager.active_capture_point = self
-	active_block.skin = skin
+	# active_block.skin = skin
 	current_values = {
 		active_block.value_b: true,
 		active_block.value_t: true
@@ -125,8 +120,7 @@ func move_block_toward_capture(delta: float):
 		moved_to_float_point = true
 	if (moving_block.global_transform.origin.x == global_transform.origin.x and
 		moving_block.global_transform.origin.z == global_transform.origin.z):
-			active_block.value_t = moving_block.value_t
-			active_block.value_b = moving_block.value_b
+			active_block.replace(moving_block)
 			rotation_tween = null
 			var next_values = {
 				active_block.value_b: true,
@@ -155,6 +149,7 @@ func test_collection(db : DominoBlock) -> bool:
 		db.value_b: true,
 		db.value_t: true
 	}
+	prints("Testing", incoming_values , current_values)
 	for key in current_values:
 		if key in incoming_values:
 			return true

@@ -25,8 +25,6 @@ next_level = "res://scenes/levels/level_4.tscn"
 
 [node name="CapturePoint" parent="." instance=ExtResource("2_ftfob")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5219994, 0.25, 6.5)
-value_t = 3
-value_b = 4
 collection_speed = 35.0
 
 [node name="Camera3D" parent="." instance=ExtResource("3_fkk1g")]
@@ -81,10 +79,10 @@ transform = Transform3D(1.9106855e-15, 4.3711385e-08, 0.99999994, 1, -4.3711385e
 transform = Transform3D(1.9106855e-15, 4.3711385e-08, 0.99999994, 1, -4.3711385e-08, 0, 4.371139e-08, 0.99999994, -4.3711385e-08, 7.264442, 1.0508395, -1.3802003)
 
 [node name="DominoBlock19" parent="TableTop" instance=ExtResource("4_ugcn1")]
-transform = Transform3D(1.9106855e-15, 4.3711385e-08, 0.99999994, 1, -4.3711385e-08, 0, 4.371139e-08, 0.99999994, -4.3711385e-08, 3.9732013, 1.0508395, -2.8665695)
+transform = Transform3D(1.9106855e-15, 4.3711385e-08, 0.99999994, 1, -4.3711385e-08, 0, 4.371139e-08, 0.99999994, -4.3711385e-08, 4.264234, 1.0508395, -2.945942)
 
 [node name="DominoBlock22" parent="TableTop" instance=ExtResource("4_ugcn1")]
-transform = Transform3D(1.9106855e-15, 4.3711385e-08, 0.99999994, 1, -4.3711385e-08, 0, 4.371139e-08, 0.99999994, -4.3711385e-08, -4.891919, 1.0508395, -1.3802003)
+transform = Transform3D(1.9106855e-15, 4.3711385e-08, 0.99999994, 1, -4.3711385e-08, 0, 4.371139e-08, 0.99999994, -4.3711385e-08, -5.050664, 1.0508395, -1.3802003)
 
 [node name="DominoBlock23" parent="TableTop" instance=ExtResource("4_ugcn1")]
 transform = Transform3D(1.9106855e-15, 4.3711385e-08, 0.99999994, 1, -4.3711385e-08, 0, 4.371139e-08, 0.99999994, -4.3711385e-08, -7.705405, 1.0508395, -3.1319911)
@@ -101,11 +99,11 @@ transform = Transform3D(-3.319278e-08, -0.7593622, 0.65066826, 1, -4.371139e-08,
 face = "down"
 
 [node name="DominoBlock11" parent="TableTop" instance=ExtResource("4_ugcn1")]
-transform = Transform3D(2.8441605e-08, 0.6506682, 0.7593622, 1, -4.371139e-08, 1.6306533e-15, 3.319278e-08, 0.7593622, -0.6506682, -4.732672, 0.36073935, -2.8665676)
+transform = Transform3D(2.8441605e-08, 0.6506682, 0.7593622, 1, -4.371139e-08, 1.6306533e-15, 3.319278e-08, 0.7593622, -0.6506682, -4.7855015, 0.36073935, -2.928222)
 face = "down"
 
 [node name="DominoBlock12" parent="TableTop" instance=ExtResource("4_ugcn1")]
-transform = Transform3D(-3.319278e-08, -0.7593622, 0.65066826, 1, -4.371139e-08, 1.6306532e-15, 2.8441605e-08, 0.65066826, 0.7593622, -1.7599378, 0.36073935, -4.2467675)
+transform = Transform3D(-3.319278e-08, -0.7593622, 0.65066826, 1, -4.371139e-08, 1.6306532e-15, 2.8441605e-08, 0.65066826, 0.7593622, -1.7792803, 0.36073935, -4.269282)
 
 [node name="DominoBlock13" parent="TableTop" instance=ExtResource("4_ugcn1")]
 transform = Transform3D(2.8441605e-08, 0.6506682, 0.7593622, 1, -4.371139e-08, 1.6306533e-15, 3.319278e-08, 0.7593622, -0.6506682, 1.2128005, 0.36073935, -2.8665676)

@@ -1,5 +1,39 @@
+class_name GameManagerClass
 extends Node
 
+static var instance:GameManagerClass = null
+func _init():
+	if GameManagerClass.instance:
+		push_error("Singleton already exists!")
+		queue_free()
+		return
+	GameManagerClass.instance = self
+	loadScore()
+	
+var _save_path = "user://67dominos.state"
+static func save_state():
+	var file = FileAccess.open(instance._save_path, FileAccess.WRITE)
+	if file:
+		file.store_line(JSON.stringify({
+			'CurrentLevel':instance.last_played,
+		}))
+	else:
+		printerr("Unable to save", instance._save_path)
+
+static func loadScore():
+	var file = FileAccess.open(instance._save_path, FileAccess.READ)
+	if file:
+		var json_string = file.get_line()
+		print("Loaded", json_string)
+		var json = JSON.new()
+		var parse_result = json.parse(json_string)
+		if parse_result == OK:
+			var node_data = json.data
+			instance.last_played=node_data['CurrentLevel']
+	else:
+		print("Unable to open", instance._save_path)
+	
+var last_played : String = ""
 var level_complete : int = 0
 var active_capture_point: Node3D
 func get_capture_point() -> CapturePoint:
@@ -14,6 +48,7 @@ func remove_domino(db: DominoBlock):
 		board_dominos.erase(db)
 	if hand_dominos.has(db):
 		hand_dominos.erase(db)
+	DominoStack.return_to_stack(db)
 	db.queue_free()
 	return null
 
@@ -24,3 +59,36 @@ func prepare_level() -> void:
 	level_complete = false
 	board_dominos = []
 	hand_dominos = []
+
+func advance_to_level(level_path:String) -> void:
+	var to_remove = board_dominos + hand_dominos
+	for db in to_remove:
+		remove_domino(db)
+	if active_capture_point:
+		if not null == get_capture_point().active_block:
+			remove_domino(get_capture_point().active_block)
+		active_capture_point = null
+	DominoStack.validate_stack()
+	level_complete = false
+	board_dominos = []
+	hand_dominos = []
+	if "/levels/" in level_path:
+		last_played = level_path
+	if last_played and level_path == "res://scenes/main_table_space.tscn":
+		level_path = last_played
+	if not "/levels/" in last_played:
+		level_path = "res://scenes/main_table_space.tscn"
+	save_state()
+	get_tree().change_scene_to_file(level_path)
+
+func _notification(what):
+	if what == NOTIFICATION_WM_CLOSE_REQUEST:
+		save_state()
+		get_tree().quit() # default behavior
+	if what == NOTIFICATION_WM_GO_BACK_REQUEST:
+		save_state()
+		get_tree().quit() # default behavior
+	if what == NOTIFICATION_APPLICATION_FOCUS_OUT:
+		save_state()
+	if what == NOTIFICATION_APPLICATION_PAUSED:
+		save_state()

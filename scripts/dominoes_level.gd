@@ -57,9 +57,10 @@ func _ready() -> void:
 const LEVEL_RESET_DELAY: int = 250 # .25 second in milliseconds
 func _process(_delta: float) -> void:
 	if GameManager.level_complete == 0xDEADBEEF:
-		GameManager.get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+		GameManager.advance_to_level("res://scenes/main_menu.tscn")
 	if GameManager.level_complete and GameManager.level_complete < Time.get_ticks_msec():
-		GameManager.get_tree().change_scene_to_file(next_level)
+		GameManager.last_played = next_level
+		GameManager.advance_to_level(next_level)
 	if GameManager.hand_dominos.size() == 0 and GameManager.board_dominos.size() > 0:
 		var lost = true
 		for bd in GameManager.board_dominos:

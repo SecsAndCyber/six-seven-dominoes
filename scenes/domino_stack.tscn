@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://lajev4h8iuxv"]
+
+[ext_resource type="Script" uid="uid://dfytyov43846c" path="res://scripts/domino_stack.gd" id="1_o0h0x"]
+
+[node name="DominoStack" type="Node3D"]
+script = ExtResource("1_o0h0x")

@@ -89,7 +89,6 @@ func _run():
 	dir.list_dir_end()
 	print("build_dominos: done")
 
-
 func _find_mesh_in_node(node):
 	var meshes = []
 	if node == null:

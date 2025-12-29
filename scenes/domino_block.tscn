@@ -1,12 +1,15 @@
-[gd_scene load_steps=4 format=3 uid="uid://dartuwkh4q1a7"]
+[gd_scene load_steps=5 format=3 uid="uid://dartuwkh4q1a7"]
 
 [ext_resource type="Script" uid="uid://bvr5gwfuuigoy" path="res://scripts/domino_block.gd" id="2_p14fe"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_u0dsp"]
-size = Vector3(0.43, 3.95, 2)
+size = Vector3(0.45, 3.95, 2)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_i8mxf"]
-size = Vector3(0.17941284, 3.8934937, 1)
+size = Vector3(0.25, 3.75, 1.8)
+
+[sub_resource type="BoxMesh" id="BoxMesh_i8mxf"]
+size = Vector3(0.45, 3.95, 2)
 
 [node name="DominoBlock" type="RigidBody3D"]
 collision_mask = 5
@@ -15,6 +18,7 @@ script = ExtResource("2_p14fe")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0016174316, 0.0021362305, 0)
 shape = SubResource("BoxShape3D_u0dsp")
+debug_color = Color(0.2677579, 0.5001481, 0.9881905, 1)
 
 [node name="MeshContainer" type="Node3D" parent="."]
 transform = Transform3D(1.0000001, 0, 0, 0, 0.9999999, 0, 0, 0, 1.0000002, 0, 0, 0)
@@ -22,8 +26,12 @@ transform = Transform3D(1.0000001, 0, 0, 0, 0.9999999, 0, 0, 0, 1.0000002, 0, 0,
 [node name="Area3D" type="Area3D" parent="."]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.31880188, 0.0082092285, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.3834715, 0, 0)
 shape = SubResource("BoxShape3D_i8mxf")
+debug_color = Color(0.6431373, 0.18039216, 0.2, 1)
+
+[node name="DebugMesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_i8mxf")
 
 [connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
 [connection signal="body_exited" from="Area3D" to="." method="_on_area_3d_body_exited"]

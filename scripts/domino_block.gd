@@ -1,88 +1,119 @@
-@tool
+#@tool
 class_name DominoBlock
 extends RigidBody3D
 
+var look_update_needed = false
 @export_range(0,7) var value_t: int = 5:
 	set(val):
+			_id.x = -1
+			_id.y = -1
 			value_t = clampi(val, 0, 7)
-			update_domino_look() # Update whenever the value changes
+			look_update_needed = true
 @export_range(0,7) var value_b: int = 5:
 	set(val):
+			_id.x = -1
+			_id.y = -1
 			value_b = clampi(val, 0, 7)
-			update_domino_look() # Update whenever the value changes
-@export_enum("default") var skin: String = "default":
-	set(val):
-			skin = val
-			update_domino_look() # Update whenever the value changes
+			look_update_needed = true
 @export_enum("up","down") var face: String = "up":
 	set(val):
 			if not face == val:
 				start_flip = val
 			face = val
+
+var _id: Vector2i = Vector2i(-1,-1)
+var id: Vector2i:
+	get():
+		if _id.x < 0 or _id.y < 0:
+			var a = min(value_t, value_b)
+			var b = max(value_t, value_b)
+			_id.x = a
+			_id.y = b
+		return _id
+		
 			
 @export var rolling_force: float = 10
-var mesh_container: Node3D = null
 var start_flip: String = ""
 @export var rotation_speed: float = 25
 @onready var area_3d: Area3D = $Area3D
-var dominos_in_zone: Dictionary = {} # Using a Dictionary as a Set
+@onready var mesh_container: Node3D = $MeshContainer
+@onready var debug_mesh: MeshInstance3D = $DebugMesh
 
+var dominos_in_zone: Dictionary = {} # Using a Dictionary as a Set
+@onready var current_renderer = ProjectSettings.get_setting("rendering/renderer/rendering_method")
+var surface_material : StandardMaterial3D = null
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	# Create a container if it doesn't exist to hold the FBX/Scene
-	if not has_node("MeshContainer"):
-		mesh_container = Node3D.new()
-		mesh_container.name = "MeshContainer"
-		add_child(mesh_container)
-	else:
-		mesh_container = get_node("MeshContainer")
+	debug_mesh.queue_free()
+
+func _enter_tree() -> void:
+	look_update_needed = true
 	
-	update_domino_look()
-	start_flip = ""
+func _exit_tree() -> void:
+	if mesh_container.get_child_count() > 0:
+		DominoStack.return_to_stack(self)
+
+func replace(db:DominoBlock):
+	DominoStack.return_to_stack(self)
+	value_t = db.value_t
+	value_b = db.value_b
+	DominoStack.return_to_stack(db)
+	look_update_needed = true
 
 func update_domino_look():
 	if not is_inside_tree(): 
 		return
 	if mesh_container == null:
 		return
-	if skin == "":
-		return
-		
 	# 2. Clear old visuals
-	for child in mesh_container.get_children():
-		child.free()
-		
-	# 3. Load and instance the new scene
-	var a = min(value_t, value_b)
-	var b = max(value_t, value_b)
-	var scene_path = "res://scenes/dominos/%s/Domino.%d.%d.tscn" % [skin, a, b]
+	if mesh_container.get_child_count() > 0:
+		for child in mesh_container.get_children():
+			prints(self, "Resetting", child.name)
+		DominoStack.return_to_stack(self)
 	
-	if ResourceLoader.exists(scene_path):
-		var scene = ResourceLoader.load(scene_path)
-		if scene:
-			var instance = scene.instantiate()
-			mesh_container.add_child(instance)
-			# Fixed assignment of large on top
-			if b==value_t and not a==b:
-				mesh_container.rotation = Vector3.RIGHT * PI
-			else:
-				mesh_container.rotation = Vector3.RIGHT * 0
+	var image = DominoStack.draw_from_stack(id, mesh_container)
+	if image == null:
+		printerr("Inable to draw", self)
+		return
+	if current_renderer == "mobile":
+		for child in image.get_children():
+			var mat = child.get_active_material(0).duplicate()
+			if "TableTop" == get_parent().name:
+				mat.render_priority = global_transform.origin.y * 10
+			child.set_surface_override_material(0, mat)
+			if child.name == "Surface":
+				surface_material = mat
+	# Fixed assignment of large on top
+	if id.y==value_t and not id.x==id.y:
+		mesh_container.rotation = Vector3.RIGHT * PI
 	else:
-		# Fallback if the file is missing
-		print("Warning: Missing domino file: ", scene_path)
-	if under_dominos():
-		face = "down"
-		start_flip = ""
+		mesh_container.rotation = Vector3.RIGHT * 0
+
 	if face == "up":
 		mesh_container.rotation.y = 0
+		if current_renderer == "mobile":
+			surface_material.render_priority += 1
 	elif face == "down":
 		mesh_container.rotation.y = PI
 
+func _to_string() -> String:
+	return "<DominoBlock {value_t},{value_b} {draw_order}>".format({
+		'value_t':value_t,
+		'value_b':value_b,
+		'draw_order':surface_material.render_priority if not null == surface_material else 0
+	})
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	if look_update_needed:
+		look_update_needed = false
+		update_domino_look()
 	# If we are in the editor, stop here and don't run tick logic
 	if Engine.is_editor_hint():
 		return
+
+	if under_dominos():
+		face = "down"
+		start_flip = ""
 	
 	if not start_flip == "":
 		if start_flip == "down":

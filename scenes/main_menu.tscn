@@ -26,12 +26,12 @@ transform = Transform3D(1, 0, 0, 0, 0.26927286, 0.96306396, 0, -0.96306396, 0.26
 [node name="Splash" type="Node3D" parent="Camera3D"]
 
 [node name="Label3D" type="Label3D" parent="Camera3D/Splash"]
-transform = Transform3D(1, 0, 0, 0, 0.9999996, 0, 0, 0, 0.9999996, 0.36724663, 0.2760589, -1.7905731)
+transform = Transform3D(1, 0, 0, 0, 0.99999946, 0, 0, 0, 0.99999946, 0.36724663, 0.34922302, -1.5288992)
 text = "Dominos"
 font_size = 117
 
 [node name="DominoBlock4" parent="Camera3D/Splash/Label3D" instance=ExtResource("3_bqqt6")]
-transform = Transform3D(0.16708963, -0.0064002275, 0.17906733, 0, -0.24484366, -0.00875121, 0.1791817, 0.0059683127, -0.16698298, -1.815, 0.005, -0.18)
+transform = Transform3D(0.7023093, 0.104635574, 0.7041398, 0.09019745, -0.99424624, 0.05778268, 0.70613503, 0.022930488, -0.7077062, -5.531708, 1.0651398, -5.048218)
 collision_layer = 0
 freeze = true
 value_t = 7
@@ -85,7 +85,7 @@ font_size = 312
 transform = Transform3D(-4.3711385e-08, -0.9999999, 0, 0.2692728, -1.1770289e-08, -0.9630638, 0.9630638, -4.2096854e-08, 0.2692728, -9.243469, 5.4352093, -9.16928)
 collision_layer = 0
 freeze = true
-value_t = 0
+value_t = 1
 value_b = 1
 rotation_speed = 0.5
 
@@ -98,7 +98,7 @@ font_size = 312
 transform = Transform3D(-4.3711385e-08, -0.9999999, 0, 0.2692728, -1.1770289e-08, -0.9630638, 0.9630638, -4.2096854e-08, 0.2692728, -8.54847, 2.8638291, -8.450321)
 collision_layer = 0
 freeze = true
-value_t = 0
+value_t = 1
 value_b = 2
 rotation_speed = 0.5
 
@@ -111,7 +111,7 @@ font_size = 312
 transform = Transform3D(-4.3711385e-08, -0.9999999, 0, 0.2692728, -1.1770289e-08, -0.9630638, 0.9630638, -4.2096854e-08, 0.2692728, -8.19347, 0.4032011, -7.762329)
 collision_layer = 0
 freeze = true
-value_t = 0
+value_t = 1
 value_b = 3
 rotation_speed = 0.5
 

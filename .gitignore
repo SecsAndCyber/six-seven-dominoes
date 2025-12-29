@@ -1,5 +1,6 @@
 # Project-specific ignores
 assets/ExportedFbx/
+/exports/
 
 # Godot 4+ specific ignores
 .godot/

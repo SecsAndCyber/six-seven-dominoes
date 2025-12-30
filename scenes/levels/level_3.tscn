@@ -1,6 +1,6 @@
 [gd_scene load_steps=10 format=3 uid="uid://dgpeo3llfep60"]
 
-[ext_resource type="Script" uid="uid://b51uhpmrsglm" path="res://scripts/dominoes_level.gd" id="1_fmg3e"]
+[ext_resource type="Script" uid="uid://dvhri8m1tmpl4" path="res://scripts/dominoes_level.gd" id="1_fmg3e"]
 [ext_resource type="PackedScene" uid="uid://dhamkvtbdtbed" path="res://scenes/capture_point.tscn" id="2_ftfob"]
 [ext_resource type="PackedScene" uid="uid://dro31wxbi680v" path="res://scenes/game_camera.tscn" id="3_fkk1g"]
 [ext_resource type="PackedScene" uid="uid://dartuwkh4q1a7" path="res://scenes/domino_block.tscn" id="4_ugcn1"]
@@ -69,7 +69,7 @@ transform = Transform3D(2.8441605e-08, 0.6506682, 0.7593622, 1, -4.371139e-08, 1
 face = "down"
 
 [node name="DominoBlock8" parent="TableTop" instance=ExtResource("4_ugcn1")]
-transform = Transform3D(-3.319278e-08, -0.7593622, 0.65066826, 1, -4.371139e-08, 1.6306532e-15, 2.8441605e-08, 0.65066826, 0.7593622, 10.595955, 0.36073935, -0.3477193)
+transform = Transform3D(-3.319278e-08, -0.7593622, 0.65066826, 1, -4.371139e-08, 1.6306532e-15, 2.8441605e-08, 0.65066826, 0.7593622, 10.84886, 0.36073935, -0.3477193)
 face = "down"
 
 [node name="DominoBlock17" parent="TableTop" instance=ExtResource("4_ugcn1")]

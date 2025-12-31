@@ -20,3 +20,8 @@ light_color = Color(0.39308554, 0.3930855, 0.39308548, 1)
 light_energy = 5.0
 shadow_enabled = true
 sky_mode = 1
+
+[node name="StreakLabel" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.9999996, 0, 0, 0, 0.9999996, 2.7794065, 1.4671142, -2.0679822)
+layers = 512
+horizontal_alignment = 2

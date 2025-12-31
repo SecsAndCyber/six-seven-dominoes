@@ -154,6 +154,7 @@ func touched():
 	if face=="up" and GameManager.get_capture_point():
 		if GameManager.get_capture_point().collectable:
 			if GameManager.get_capture_point().test_collection(self):
+				GameManager.click_streak += 1
 				GameManager.get_capture_point().collect_new_domino(self)
 			else:
 				start_flip = "down" if face == "up" else "up"

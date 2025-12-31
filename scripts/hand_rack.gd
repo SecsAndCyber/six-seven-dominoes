@@ -82,4 +82,5 @@ func touched():
 	if GameManager.get_capture_point():
 		if GameManager.get_capture_point().collectable:
 			if dominos_in_hand.size():
+				GameManager.click_streak = 0
 				start_setting_domino(dominos_in_hand.pop_back())

@@ -33,8 +33,17 @@ static func loadScore():
 	else:
 		print("Unable to open", instance._save_path)
 	
+# ++++++++++++ Persistent Values
 var last_played : String = ""
+var click_streak : int = 0
+# ++++++++++++ End Persistent Values
+
+# 0 = not complete
+# 0xDEADBEEF = lost
+# Other values are a timestamp for when the level should change
+# This is a hack while end-of-level modals don't exist
 var level_complete : int = 0
+
 var active_capture_point: Node3D
 func get_capture_point() -> CapturePoint:
 	return active_capture_point as CapturePoint
@@ -60,7 +69,7 @@ func prepare_level() -> void:
 	board_dominos = []
 	hand_dominos = []
 
-func advance_to_level(level_path:String) -> void:
+func advance_to_level(level_path:String, allow_main_menu:bool=false) -> void:
 	var to_remove = board_dominos + hand_dominos
 	for db in to_remove:
 		remove_domino(db)
@@ -76,8 +85,9 @@ func advance_to_level(level_path:String) -> void:
 		last_played = level_path
 	if last_played and level_path == "res://scenes/main_table_space.tscn":
 		level_path = last_played
-	if not "/levels/" in last_played:
-		level_path = "res://scenes/main_table_space.tscn"
+	if not allow_main_menu:
+		if not "/levels/" in last_played:
+			level_path = "res://scenes/main_table_space.tscn"
 	save_state()
 	get_tree().change_scene_to_file(level_path)
 

@@ -1,6 +1,8 @@
 extends StaticBody3D
 
-var dominos_in_hand:Array = []
+var _ready_done:bool = false
+var dominos_in_hand:Array[DominoBlock] = []
+var dominos_reset:Array[bool] = []
 var domino_drawn: DominoBlock = null
 @export var collection_speed : float = 0.10
 @onready var float_point: Node3D = $FloatPoint
@@ -22,13 +24,25 @@ func start_setting_domino(db: DominoBlock):
 	rotated = false
 	ready_to_set = false
 	domino_drawn = db
+	_ready_done = true
 	
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	for child in get_children():
 		if child is DominoBlock:
-			print(child, child.transform.origin)
 			dominos_in_hand.append(child)
+	get_tree().create_timer(0.05).timeout.connect(fix_ordering)
+func fix_ordering():
+	if _ready_done:
+		return
+	var i = 0
+	for child in dominos_in_hand:
+		if null == child.surface_material:
+			return get_tree().create_timer(0.05).timeout.connect(fix_ordering)
+		child.surface_material.render_priority = i
+		i += 1
+	_ready_done = true
+	
 
 func _process(delta: float) -> void:
 	if not domino_drawn == null:

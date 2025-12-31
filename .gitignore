@@ -23,7 +23,6 @@ mono_crash.*.json
 
 # Toolchain-specific ignores
 *.blend1
-scenes/dominos/default/Domino.*.tscn
 *.gd.uid
 
 # Platform-specific ignores

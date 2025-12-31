@@ -9,7 +9,7 @@ size = Vector3(0.45, 3.95, 2)
 size = Vector3(0.25, 3.75, 1.8)
 
 [sub_resource type="BoxMesh" id="BoxMesh_i8mxf"]
-size = Vector3(0.45, 3.95, 2)
+size = Vector3(0.05, 3.95, 2)
 
 [node name="DominoBlock" type="RigidBody3D"]
 collision_mask = 5

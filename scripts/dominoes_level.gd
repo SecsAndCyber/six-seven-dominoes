@@ -57,6 +57,7 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 const LEVEL_RESET_DELAY: int = 250 # .25 second in milliseconds
 func _process(_delta: float) -> void:
+	print(table_top.get_node("TableTop2").get_active_material(0).albedo_color)
 	streak_label.text = "%s Streak" % ["•".repeat(GameManager.click_streak)]
 	if GameManager.level_complete == 0xDEADBEEF:
 		return GameManager.advance_to_level("res://scenes/loss_menu.tscn", true)
@@ -64,7 +65,7 @@ func _process(_delta: float) -> void:
 		GameManager.last_played = next_level
 		GameManager.advance_to_level(next_level)
 	if GameManager.hand_dominos.size() == 0 and GameManager.board_dominos.size() > 0:
-		var lost = true
+		var lost = not hand.has_wild_card
 		for bd in GameManager.board_dominos:
 			if GameManager.active_capture_point and bd.face == "up":
 				if bd.value_b in GameManager.get_capture_point().current_values:

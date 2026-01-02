@@ -1,10 +1,10 @@
 [gd_scene load_steps=10 format=3 uid="uid://dgpeo3llfep60"]
 
-[ext_resource type="Script" uid="uid://b51uhpmrsglm" path="res://scripts/dominoes_level.gd" id="1_fmg3e"]
-[ext_resource type="PackedScene" uid="uid://dhamkvtbdtbed" path="res://scenes/capture_point.tscn" id="2_ftfob"]
-[ext_resource type="PackedScene" uid="uid://dro31wxbi680v" path="res://scenes/game_camera.tscn" id="3_fkk1g"]
-[ext_resource type="PackedScene" uid="uid://dartuwkh4q1a7" path="res://scenes/domino_block.tscn" id="4_ugcn1"]
-[ext_resource type="PackedScene" uid="uid://kb6wm8lyrkvh" path="res://scenes/hand_rack.tscn" id="5_pimnq"]
+[ext_resource type="Script" uid="uid://b51uhpmrsglm" path="res://scripts/dominoes_level.gd" id="1_wmrd2"]
+[ext_resource type="PackedScene" uid="uid://dhamkvtbdtbed" path="res://scenes/capture_point.tscn" id="2_1qpo7"]
+[ext_resource type="PackedScene" uid="uid://dro31wxbi680v" path="res://scenes/game_camera.tscn" id="3_6wjgw"]
+[ext_resource type="PackedScene" uid="uid://dartuwkh4q1a7" path="res://scenes/domino_block.tscn" id="4_a0tsa"]
+[ext_resource type="PackedScene" uid="uid://kb6wm8lyrkvh" path="res://scenes/hand_rack.tscn" id="5_e0dm4"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_5ildb"]
 
@@ -20,14 +20,14 @@ material = SubResource("StandardMaterial3D_1x550")
 size = Vector2(40, 16)
 
 [node name="TableSpace" type="Node3D"]
-script = ExtResource("1_fmg3e")
-next_level = "res://scenes/levels/level_4.tscn"
+script = ExtResource("1_wmrd2")
+next_level = "res://scenes/levels/level_6_2.tscn"
 
-[node name="CapturePoint" parent="." instance=ExtResource("2_ftfob")]
+[node name="CapturePoint" parent="." instance=ExtResource("2_1qpo7")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5219994, 0.25, 6.5)
 collection_speed = 35.0
 
-[node name="Camera3D" parent="." instance=ExtResource("3_fkk1g")]
+[node name="Camera3D" parent="." instance=ExtResource("3_6wjgw")]
 transform = Transform3D(1, 0, 0, 0, 0.26927286, 0.96306396, 0, -0.96306396, 0.26927286, 0, 8.933517, 4.1343374)
 
 [node name="TableTop" type="StaticBody3D" parent="."]
@@ -42,109 +42,109 @@ shape = SubResource("BoxShape3D_br6f8")
 mesh = SubResource("PlaneMesh_5ildb")
 skeleton = NodePath("../..")
 
-[node name="DominoBlock" parent="TableTop" instance=ExtResource("4_ugcn1")]
+[node name="DominoBlock" parent="TableTop" instance=ExtResource("4_a0tsa")]
 transform = Transform3D(2.8441605e-08, 0.6506682, 0.7593622, 1, -4.371139e-08, 1.6306533e-15, 3.319278e-08, 0.7593622, -0.6506682, -10.817141, 0.36073935, 0.33317542)
 face = "down"
 
-[node name="DominoBlock2" parent="TableTop" instance=ExtResource("4_ugcn1")]
+[node name="DominoBlock2" parent="TableTop" instance=ExtResource("4_a0tsa")]
 transform = Transform3D(-3.319278e-08, -0.7593622, 0.65066826, 1, -4.371139e-08, 1.6306532e-15, 2.8441605e-08, 0.65066826, 0.7593622, -7.554892, 0.36073932, -1.0088221)
 face = "down"
 
-[node name="DominoBlock3" parent="TableTop" instance=ExtResource("4_ugcn1")]
+[node name="DominoBlock3" parent="TableTop" instance=ExtResource("4_a0tsa")]
 transform = Transform3D(2.8441605e-08, 0.6506682, 0.7593622, 1, -4.371139e-08, 1.6306533e-15, 3.319278e-08, 0.7593622, -0.6506682, -4.515369, 0.36073935, 0.35964257)
 face = "down"
 
-[node name="DominoBlock4" parent="TableTop" instance=ExtResource("4_ugcn1")]
+[node name="DominoBlock4" parent="TableTop" instance=ExtResource("4_a0tsa")]
 transform = Transform3D(-3.319278e-08, -0.7593622, 0.65066826, 1, -4.371139e-08, 1.6306532e-15, 2.8441605e-08, 0.65066826, 0.7593622, -1.1759992, 0.36073935, -0.7163116)
 
-[node name="DominoBlock5" parent="TableTop" instance=ExtResource("4_ugcn1")]
+[node name="DominoBlock5" parent="TableTop" instance=ExtResource("4_a0tsa")]
 transform = Transform3D(2.8441605e-08, 0.6506682, 0.7593622, 1, -4.371139e-08, 1.6306533e-15, 3.319278e-08, 0.7593622, -0.6506682, 1.5354646, 0.36073935, 0.99837863)
 
-[node name="DominoBlock6" parent="TableTop" instance=ExtResource("4_ugcn1")]
+[node name="DominoBlock6" parent="TableTop" instance=ExtResource("4_a0tsa")]
 transform = Transform3D(-3.319278e-08, -0.7593622, 0.65066826, 1, -4.371139e-08, 1.6306532e-15, 2.8441605e-08, 0.65066826, 0.7593622, 4.5973926, 0.36073935, -0.3477193)
 face = "down"
 
-[node name="DominoBlock7" parent="TableTop" instance=ExtResource("4_ugcn1")]
+[node name="DominoBlock7" parent="TableTop" instance=ExtResource("4_a0tsa")]
 transform = Transform3D(2.8441605e-08, 0.6506682, 0.7593622, 1, -4.371139e-08, 1.6306533e-15, 3.319278e-08, 0.7593622, -0.6506682, 7.6232204, 0.36073935, 1.0324806)
 face = "down"
 
-[node name="DominoBlock8" parent="TableTop" instance=ExtResource("4_ugcn1")]
+[node name="DominoBlock8" parent="TableTop" instance=ExtResource("4_a0tsa")]
 transform = Transform3D(-3.319278e-08, -0.7593622, 0.65066826, 1, -4.371139e-08, 1.6306532e-15, 2.8441605e-08, 0.65066826, 0.7593622, 10.84886, 0.36073935, -0.3477193)
 face = "down"
 
-[node name="DominoBlock17" parent="TableTop" instance=ExtResource("4_ugcn1")]
+[node name="DominoBlock17" parent="TableTop" instance=ExtResource("4_a0tsa")]
 transform = Transform3D(1.9106855e-15, 4.3711385e-08, 0.99999994, 1, -4.3711385e-08, 0, 4.371139e-08, 0.99999994, -4.3711385e-08, 10.967545, 1.0508395, -1.9402578)
 
-[node name="DominoBlock18" parent="TableTop" instance=ExtResource("4_ugcn1")]
+[node name="DominoBlock18" parent="TableTop" instance=ExtResource("4_a0tsa")]
 transform = Transform3D(1.9106855e-15, 4.3711385e-08, 0.99999994, 1, -4.3711385e-08, 0, 4.371139e-08, 0.99999994, -4.3711385e-08, 7.7824664, 1.0508395, -0.34771967)
 
-[node name="DominoBlock19" parent="TableTop" instance=ExtResource("4_ugcn1")]
+[node name="DominoBlock19" parent="TableTop" instance=ExtResource("4_a0tsa")]
 transform = Transform3D(1.9106855e-15, 4.3711385e-08, 0.99999994, 1, -4.3711385e-08, 0, 4.371139e-08, 0.99999994, -4.3711385e-08, 4.7822585, 1.0508395, -1.9134614)
 
-[node name="DominoBlock22" parent="TableTop" instance=ExtResource("4_ugcn1")]
+[node name="DominoBlock22" parent="TableTop" instance=ExtResource("4_a0tsa")]
 transform = Transform3D(1.9106855e-15, 4.3711385e-08, 0.99999994, 1, -4.3711385e-08, 0, 4.371139e-08, 0.99999994, -4.3711385e-08, -4.3605585, 1.0508395, -1.3802003)
 
-[node name="DominoBlock23" parent="TableTop" instance=ExtResource("4_ugcn1")]
+[node name="DominoBlock23" parent="TableTop" instance=ExtResource("4_a0tsa")]
 transform = Transform3D(1.9106855e-15, 4.3711385e-08, 0.99999994, 1, -4.3711385e-08, 0, 4.371139e-08, 0.99999994, -4.3711385e-08, -7.5732427, 1.0508395, -2.0426724)
 
-[node name="DominoBlock24" parent="TableTop" instance=ExtResource("4_ugcn1")]
+[node name="DominoBlock24" parent="TableTop" instance=ExtResource("4_a0tsa")]
 transform = Transform3D(1.9106855e-15, 4.3711385e-08, 0.99999994, 1, -4.3711385e-08, 0, 4.371139e-08, 0.99999994, -4.3711385e-08, -10.976389, 1.0508395, -0.94085443)
 
-[node name="DominoBlock9" parent="TableTop" instance=ExtResource("4_ugcn1")]
+[node name="DominoBlock9" parent="TableTop" instance=ExtResource("4_a0tsa")]
 transform = Transform3D(2.8441605e-08, 0.6506682, 0.7593622, 1, -4.371139e-08, 1.6306533e-15, 3.319278e-08, 0.7593622, -0.6506682, -10.710974, 0.36073935, -2.5333922)
 face = "down"
 
-[node name="DominoBlock10" parent="TableTop" instance=ExtResource("4_ugcn1")]
+[node name="DominoBlock10" parent="TableTop" instance=ExtResource("4_a0tsa")]
 transform = Transform3D(-3.319278e-08, -0.7593622, 0.65066826, 1, -4.371139e-08, 1.6306532e-15, 2.8441605e-08, 0.65066826, 0.7593622, -7.6143093, 0.36073932, -3.7335072)
 face = "down"
 
-[node name="DominoBlock11" parent="TableTop" instance=ExtResource("4_ugcn1")]
+[node name="DominoBlock11" parent="TableTop" instance=ExtResource("4_a0tsa")]
 transform = Transform3D(2.8441605e-08, 0.6506682, 0.7593622, 1, -4.371139e-08, 1.6306533e-15, 3.319278e-08, 0.7593622, -0.6506682, -4.462032, 0.36073935, -2.5685794)
 face = "down"
 
-[node name="DominoBlock12" parent="TableTop" instance=ExtResource("4_ugcn1")]
+[node name="DominoBlock12" parent="TableTop" instance=ExtResource("4_a0tsa")]
 transform = Transform3D(-3.319278e-08, -0.7593622, 0.65066826, 1, -4.371139e-08, 1.6306532e-15, 2.8441605e-08, 0.65066826, 0.7593622, -1.0773399, 0.36073935, -3.648463)
 
-[node name="DominoBlock13" parent="TableTop" instance=ExtResource("4_ugcn1")]
+[node name="DominoBlock13" parent="TableTop" instance=ExtResource("4_a0tsa")]
 transform = Transform3D(2.8441605e-08, 0.6506682, 0.7593622, 1, -4.371139e-08, 1.6306533e-15, 3.319278e-08, 0.7593622, -0.6506682, 1.7881846, 0.36073935, -1.9488075)
 
-[node name="DominoBlock14" parent="TableTop" instance=ExtResource("4_ugcn1")]
+[node name="DominoBlock14" parent="TableTop" instance=ExtResource("4_a0tsa")]
 transform = Transform3D(-3.319278e-08, -0.7593622, 0.65066826, 1, -4.371139e-08, 1.6306532e-15, 2.8441605e-08, 0.65066826, 0.7593622, 4.7035594, 0.36073935, -3.214287)
 face = "down"
 
-[node name="DominoBlock15" parent="TableTop" instance=ExtResource("4_ugcn1")]
+[node name="DominoBlock15" parent="TableTop" instance=ExtResource("4_a0tsa")]
 transform = Transform3D(2.8441605e-08, 0.6506682, 0.7593622, 1, -4.371139e-08, 1.6306533e-15, 3.319278e-08, 0.7593622, -0.6506682, 7.7293873, 0.36073935, -1.8340871)
 face = "down"
 
-[node name="DominoBlock16" parent="TableTop" instance=ExtResource("4_ugcn1")]
+[node name="DominoBlock16" parent="TableTop" instance=ExtResource("4_a0tsa")]
 transform = Transform3D(-3.319278e-08, -0.7593622, 0.65066826, 1, -4.371139e-08, 1.6306532e-15, 2.8441605e-08, 0.65066826, 0.7593622, 10.702122, 0.36073935, -3.214287)
 face = "down"
 
-[node name="Hand" parent="." instance=ExtResource("5_pimnq")]
+[node name="Hand" parent="." instance=ExtResource("5_e0dm4")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -4.2261543, -0.75158834, 9.84432)
 collection_speed = 50.0
 
-[node name="DominoBlock" parent="Hand" instance=ExtResource("4_ugcn1")]
+[node name="DominoBlock" parent="Hand" instance=ExtResource("4_a0tsa")]
 transform = Transform3D(0.5969813, 0.8022552, -1.7616511e-08, -0.8022552, 0.5969813, -3.506769e-08, -1.7616507e-08, 3.506769e-08, 1, 3.4089298, 2.3598084, -2.7246194)
 collision_layer = 2
 collision_mask = 7
 
-[node name="DominoBlock2" parent="Hand" instance=ExtResource("4_ugcn1")]
+[node name="DominoBlock2" parent="Hand" instance=ExtResource("4_a0tsa")]
 transform = Transform3D(0.572419, 0.8016894, 0.17213629, -0.76190895, 0.5976252, -0.249678, -0.30303717, 0.011768229, 0.95290613, 3.1717398, 2.6172392, -1.4268975)
 collision_layer = 2
 collision_mask = 7
 
-[node name="DominoBlock3" parent="Hand" instance=ExtResource("4_ugcn1")]
+[node name="DominoBlock3" parent="Hand" instance=ExtResource("4_a0tsa")]
 transform = Transform3D(0.572419, 0.8016894, 0.17213629, -0.76190895, 0.5976252, -0.249678, -0.30303717, 0.011768229, 0.95290613, 2.7682006, 2.2117422, 0.16213417)
 collision_layer = 2
 collision_mask = 7
 
-[node name="DominoBlock4" parent="Hand" instance=ExtResource("4_ugcn1")]
+[node name="DominoBlock4" parent="Hand" instance=ExtResource("4_a0tsa")]
 transform = Transform3D(0.48666862, 0.84388196, 0.22586969, -0.78066015, 0.5361541, -0.32110554, -0.39207613, -0.020055499, 0.91971415, 2.408214, 2.2412744, 1.5622131)
 collision_layer = 2
 collision_mask = 7
 
-[node name="DominoBlock5" parent="Hand" instance=ExtResource("4_ugcn1")]
+[node name="DominoBlock5" parent="Hand" instance=ExtResource("4_a0tsa")]
 transform = Transform3D(0.48666862, 0.84388196, 0.22586969, -0.78066015, 0.5361541, -0.32110554, -0.39207613, -0.020055499, 0.91971415, 2.3657084, 2.2779675, 2.5944772)
 collision_layer = 2
 collision_mask = 7

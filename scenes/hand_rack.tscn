@@ -6,6 +6,7 @@
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6iyva"]
 albedo_color = Color(0.4053837, 0.22774413, 0.06097856, 1)
+metallic_specular = 0.0
 
 [node name="StaticBody3D" type="StaticBody3D"]
 collision_layer = 5
@@ -24,4 +25,7 @@ depth = 10.0
 material = SubResource("StandardMaterial3D_6iyva")
 
 [node name="FloatPoint" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 4, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 5, 0)
+
+[node name="WildCardLocation" type="Node3D" parent="."]
+transform = Transform3D(0.48702988, 0.8436542, 0.22594135, -0.78062075, 0.5365058, -0.32061297, -0.39170533, -0.020226419, 0.91986835, 2.366, 2.278, 3.704)

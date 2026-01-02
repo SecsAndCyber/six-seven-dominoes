@@ -1,5 +1,6 @@
 extends Node3D
 
+@export var next_level: String = "res://scenes/level_4_0_startingLevel.tscn"
 @onready var splash: Node3D = $Camera3D/Splash
 @onready var menu_a: Node3D = $Camera3D/MenuA
 @onready var menu_about: Node3D = $Camera3D/MenuAbout
@@ -26,4 +27,4 @@ func _input(event):
 	elif menu_a.visible:
 		if event is InputEventMouseButton or event is InputEventScreenTouch:
 			if event.is_pressed():
-				GameManager.advance_to_level("res://scenes/main_table_space.tscn")
+				GameManager.advance_to_level(next_level)

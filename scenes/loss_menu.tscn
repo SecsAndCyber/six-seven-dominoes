@@ -1,0 +1,55 @@
+[gd_scene load_steps=8 format=3 uid="uid://cx4dimulbckoi"]
+
+[ext_resource type="Script" uid="uid://bcjdcyl1xyqtl" path="res://scripts/loss_menu.gd" id="1_u6it3"]
+[ext_resource type="PackedScene" uid="uid://dro31wxbi680v" path="res://scenes/game_camera.tscn" id="2_5rqbm"]
+[ext_resource type="PackedScene" uid="uid://dartuwkh4q1a7" path="res://scenes/domino_block.tscn" id="3_eo3ww"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_l6cm7"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_ekxnf"]
+size = Vector3(40, 0.25, 16)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w55pu"]
+albedo_color = Color(0.5264201, 0.3272072, 0.057221487, 1)
+metallic_specular = 0.15
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_bqqt6"]
+material = SubResource("StandardMaterial3D_w55pu")
+size = Vector2(40, 16)
+
+[node name="LossMenu" type="Node3D"]
+script = ExtResource("1_u6it3")
+
+[node name="Camera3D" parent="." instance=ExtResource("2_5rqbm")]
+transform = Transform3D(1, 0, 0, 0, 0.26927286, 0.96306396, 0, -0.96306396, 0.26927286, 0, 7.699459, 4.5392)
+
+[node name="Splash" type="Node3D" parent="Camera3D"]
+
+[node name="Label3D" type="Label3D" parent="Camera3D/Splash"]
+transform = Transform3D(1, 0, 0, 0, 0.99999946, 0, 0, 0, 0.99999946, 0.36724663, 0.34922302, -1.5288992)
+text = "Dominos"
+font_size = 117
+
+[node name="67DominoBlock" parent="Camera3D/Splash/Label3D" instance=ExtResource("3_eo3ww")]
+transform = Transform3D(0.7023093, 0.104635574, 0.7041398, 0.09019745, -0.99424624, 0.05778268, 0.70613503, 0.022930488, -0.7077062, -5.531708, 1.0651398, -5.048218)
+collision_layer = 0
+freeze = true
+value_t = 7
+value_b = 6
+rotation_speed = 0.5
+
+[node name="Label_Loss_Stat" type="Label3D" parent="Camera3D/Splash"]
+transform = Transform3D(1, 0, 0, 0, 0.9999999, 0, 0, 0, 0.9999999, 0.2528658, -0.469234, -1.6782317)
+text = "0 tiles left on the table"
+
+[node name="Backdrop" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.036530018, 0.082410336, -0.19729328)
+collision_layer = 4
+physics_material_override = SubResource("PhysicsMaterial_l6cm7")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Backdrop"]
+shape = SubResource("BoxShape3D_ekxnf")
+
+[node name="TableTop2" type="MeshInstance3D" parent="Backdrop"]
+mesh = SubResource("PlaneMesh_bqqt6")
+skeleton = NodePath("../..")

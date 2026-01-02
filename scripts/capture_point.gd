@@ -38,7 +38,7 @@ func _exit_tree() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	if not active_block == null:
+	if is_instance_valid(active_block):
 		setup_active_block()
 	else:
 		active_block = find_child("*", true, false) as DominoBlock
@@ -48,11 +48,15 @@ func _process(delta: float) -> void:
 func setup_active_block():
 	active_block.freeze = true
 	active_block.set_collision_layer_value(1, false)
-	active_block.rotation = compute_block_rotation(active_block)
+	print(active_block, is_instance_valid(active_block))
+	var cbr = compute_block_rotation(active_block)
+	active_block.rotation = cbr
 	
 func compute_block_rotation(db: DominoBlock):
 	if db==active_block:
-		if db.value_t == db.value_b:
+		if db.is_wildcard:
+			return Vector3(PI, 0, PI/2)
+		elif db.value_t == db.value_b:
 			return Vector3(0, 0, PI/2)
 		elif set_from_hand and db==active_block:
 			return Vector3(0, 0, PI/2)
@@ -62,17 +66,22 @@ func compute_block_rotation(db: DominoBlock):
 			else:
 				return Vector3(0, PI/2, PI/2)
 	elif not db==active_block:
-		if db.value_b in current_values and\
+		if db.is_wildcard:
+			return Vector3(PI, 0, PI/2)
+		elif db.value_b in current_values and\
 			db.value_t in current_values:
 				return Vector3(0, 0, PI/2)
 		elif db.value_t in current_values:
 			return Vector3(0, PI/2, PI/2)
 		else:
 			return Vector3(0, -PI/2, PI/2)
+	else:
+		printerr("Unknown DominoBlock", db)
 	
 var moved_to_float_point: bool = false
 func move_block_toward_capture(delta: float):
 	moving_block.freeze = true
+	moving_block.surface_material.render_priority = moving_block.surface_material.RENDER_PRIORITY_MAX
 	
 	var destination: Node3D = self if moved_to_float_point else float_point
 	if not moved_to_float_point and moving_block.global_transform.origin.y < float_point.global_transform.origin.y:
@@ -87,7 +96,7 @@ func move_block_toward_capture(delta: float):
 			var target_rotation = Quaternion.from_euler(
 									compute_block_rotation(moving_block)
 								)
-			rotation_tween.tween_property(moving_block, "quaternion", target_rotation, 0.5)\
+			rotation_tween.tween_property(moving_block, "quaternion", target_rotation, 1)\
 				.set_trans(Tween.TRANS_BACK)\
 				.set_ease(Tween.EASE_OUT)
 			rotation_tween.finished.connect(func(): rotated = true)
@@ -120,26 +129,36 @@ func move_block_toward_capture(delta: float):
 		moved_to_float_point = true
 	if (moving_block.global_transform.origin.x == global_transform.origin.x and
 		moving_block.global_transform.origin.z == global_transform.origin.z):
-			active_block.replace(moving_block)
-			rotation_tween = null
-			var next_values = {
-				active_block.value_b: true,
-				active_block.value_t: true
-			}
-			set_from_hand = incoming_from_hand
-			if incoming_from_hand:
-				single_value = false
-				incoming_from_hand = false
-				current_values = next_values
-			else:
-				single_value = not next_values.size() == 1
-				if single_value:
-					for key in current_values:
-						if key in next_values:
-							next_values.erase(key)
-				current_values = next_values
-			moving_block.visible = false
-			moving_block = GameManager.remove_domino(moving_block)
+			setup_active_block_from_movement()
+
+func setup_active_block_from_movement():
+	var replaced_wildcard = active_block.is_wildcard
+	if moving_block.is_wildcard:
+		print("Merging a wildcard!")
+	active_block.replace(moving_block)
+	
+	rotation_tween = null
+	var next_values = {
+		active_block.value_b: true,
+		active_block.value_t: true
+	}
+	set_from_hand = incoming_from_hand or replaced_wildcard
+	if incoming_from_hand:
+		single_value = false
+		incoming_from_hand = false
+		current_values = next_values
+		if active_block.is_wildcard:
+			for x in range(-1,10):
+				current_values[x] = true
+	else:
+		single_value = not (next_values.size() == 1 or -1 in current_values)
+		if single_value:
+			for key in current_values:
+				if key in next_values:
+					next_values.erase(key)
+		current_values = next_values
+	moving_block.visible = false
+	moving_block = GameManager.remove_domino(moving_block)
 
 func test_collection(db : DominoBlock) -> bool:
 	if not collectable:

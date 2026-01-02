@@ -18,6 +18,7 @@ func get_active_camera() -> Camera3D:
 	return get_viewport().get_camera_3d()
 
 func _perform_raycast(screen_pos: Vector2) -> void:
+	if GameManager.level_complete == 0xDEADBEEF: return
 	if get_viewport() == null: return
 	if get_active_camera() == null: return
 	# 1. Calculate the start and end points of the ray

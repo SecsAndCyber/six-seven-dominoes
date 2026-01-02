@@ -1,6 +1,8 @@
 class_name GameManagerClass
 extends Node
 
+var STARTING_LEVEL: String = "res://scenes/level_4_0_startingLevel.tscn"
+
 static var instance:GameManagerClass = null
 func _init():
 	if GameManagerClass.instance:
@@ -43,6 +45,7 @@ var click_streak : int = 0
 # Other values are a timestamp for when the level should change
 # This is a hack while end-of-level modals don't exist
 var level_complete : int = 0
+var dominos_abandoned : int = 0
 
 var active_capture_point: Node3D
 func get_capture_point() -> CapturePoint:
@@ -71,6 +74,13 @@ func prepare_level() -> void:
 
 func advance_to_level(level_path:String, allow_main_menu:bool=false) -> void:
 	var to_remove = board_dominos + hand_dominos
+	if level_complete == 0xDEADBEEF:
+		dominos_abandoned = board_dominos.size()
+		if dominos_abandoned > 0:
+			# Clear the click streak if the game was lost
+			click_streak = 0
+	else:
+		dominos_abandoned = 0
 	for db in to_remove:
 		remove_domino(db)
 	if active_capture_point:
@@ -83,11 +93,11 @@ func advance_to_level(level_path:String, allow_main_menu:bool=false) -> void:
 	hand_dominos = []
 	if "/levels/" in level_path:
 		last_played = level_path
-	if last_played and level_path == "res://scenes/main_table_space.tscn":
+	if last_played and level_path == STARTING_LEVEL:
 		level_path = last_played
 	if not allow_main_menu:
 		if not "/levels/" in last_played:
-			level_path = "res://scenes/main_table_space.tscn"
+			level_path = STARTING_LEVEL
 	save_state()
 	get_tree().change_scene_to_file(level_path)
 

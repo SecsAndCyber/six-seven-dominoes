@@ -59,7 +59,7 @@ const LEVEL_RESET_DELAY: int = 250 # .25 second in milliseconds
 func _process(_delta: float) -> void:
 	streak_label.text = "%s Streak" % ["•".repeat(GameManager.click_streak)]
 	if GameManager.level_complete == 0xDEADBEEF:
-		GameManager.advance_to_level("res://scenes/main_menu.tscn", true)
+		return GameManager.advance_to_level("res://scenes/loss_menu.tscn", true)
 	if GameManager.level_complete and GameManager.level_complete < Time.get_ticks_msec():
 		GameManager.last_played = next_level
 		GameManager.advance_to_level(next_level)

@@ -2,6 +2,7 @@
 class_name DominoBlock
 extends RigidBody3D
 
+var is_wildcard = false
 var look_update_needed = false
 @export_range(0,7) var value_t: int = 5:
 	set(val):
@@ -44,7 +45,8 @@ var dominos_in_zone: Dictionary = {} # Using a Dictionary as a Set
 var surface_material : StandardMaterial3D = null
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	debug_mesh.queue_free()
+	if not is_wildcard:
+		debug_mesh.queue_free()
 
 func _enter_tree() -> void:
 	look_update_needed = true
@@ -55,6 +57,7 @@ func _exit_tree() -> void:
 
 func replace(db:DominoBlock):
 	DominoStack.return_to_stack(self)
+	self.is_wildcard = db.is_wildcard
 	value_t = db.value_t
 	value_b = db.value_b
 	DominoStack.return_to_stack(db)
@@ -71,10 +74,15 @@ func update_domino_look():
 			prints(self, "Resetting", child.name)
 		DominoStack.return_to_stack(self)
 	
-	var image = DominoStack.draw_from_stack(id, mesh_container)
-	if image == null:
-		printerr("Inable to draw", self)
-		return
+	var image: Node3D
+	if is_wildcard:
+		image = DominoStack.wildcard_domino
+		mesh_container.add_child(image)
+	else:
+		image = DominoStack.draw_from_stack(id, mesh_container)
+		if image == null:
+			printerr("Inable to draw", self)
+			return
 	if current_renderer == "mobile":
 		for child in image.get_children():
 			var mat = child.get_active_material(0).duplicate()
@@ -92,7 +100,8 @@ func update_domino_look():
 	if face == "up":
 		mesh_container.rotation.y = 0
 		if current_renderer == "mobile":
-			surface_material.render_priority += 1
+			if surface_material.render_priority < surface_material.RENDER_PRIORITY_MAX:
+				surface_material.render_priority = global_transform.origin.y * 10 + 1
 	elif face == "down":
 		mesh_container.rotation.y = PI
 
@@ -104,9 +113,25 @@ func _to_string() -> String:
 	})
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	if not is_inside_tree():
+		return
 	if look_update_needed:
 		look_update_needed = false
 		update_domino_look()
+	if not null == surface_material:
+		if is_wildcard:
+			surface_material.albedo_color = "#ffdd00"
+			surface_material.metallic = .90
+			surface_material.roughness = .1
+			surface_material.emission = "#ffdd00"
+			surface_material.emission_operator = surface_material.EMISSION_OP_MULTIPLY
+			surface_material.emission_enabled = true
+			surface_material.emission_energy_multiplier = 1000
+		else:
+			surface_material.albedo_color = "#ffffff"
+			surface_material.metallic = 0
+			surface_material.roughness = 1.0
+			surface_material.emission_enabled = false
 	# If we are in the editor, stop here and don't run tick logic
 	if Engine.is_editor_hint():
 		return
@@ -154,7 +179,8 @@ func touched():
 	if face=="up" and GameManager.get_capture_point():
 		if GameManager.get_capture_point().collectable:
 			if GameManager.get_capture_point().test_collection(self):
-				GameManager.click_streak += 1
+				if not GameManager.get_capture_point().active_block.is_wildcard:
+					GameManager.click_streak += 1
 				GameManager.get_capture_point().collect_new_domino(self)
 			else:
 				start_flip = "down" if face == "up" else "up"

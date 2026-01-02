@@ -5,17 +5,27 @@ extends Node3D
 		skin = val
 			
 var idle_dominoes: Dictionary[Vector2i, Node3D]
+var wildcard_domino: Node3D = null
+
+func domino_factory(id):
+	var scene_path = domino_scene(id)
+	if ResourceLoader.exists(scene_path):
+		var scene = ResourceLoader.load(scene_path)
+		var instance = scene.instantiate()
+		return instance
+	else:
+		printerr("Tried to load missing file ", scene_path)
+		return null
+
 func _ready():
 	for id in domino_ids():
-		var scene_path = domino_scene(id)
-		if ResourceLoader.exists(scene_path):
-			var scene = ResourceLoader.load(scene_path)
-			var instance = scene.instantiate()
-			instance.name = "Domino-%d-%d" % [id.x, id.y]
-			print(id, instance)
-			idle_dominoes[id] = instance
-		else:
-			printerr("Tried to load missing file ", scene_path)
+		var instance = domino_factory(id)
+		if null == instance:
+			continue
+		instance.name = "Domino-%d-%d" % [id.x, id.y]
+		idle_dominoes[id] = instance
+	wildcard_domino = domino_factory(Vector2i(0,0))
+	wildcard_domino.name = "WildCardDomino"
 
 func domino_scene(id) -> String:
 	return "res://scenes/dominos/%s/Domino.%d.%d.tscn" % [skin, id.x, id.y]
@@ -48,7 +58,10 @@ func return_to_stack(db: Node3D):
 			if not null == image:
 				image.get_parent().remove_child(image)
 				prints("Returned", db.id, image)
-				idle_dominoes[db.id] = image
+				if db.is_wildcard:
+					print("Returned wildcard")
+				else:
+					idle_dominoes[db.id] = image
 			else:
 				printerr("Returned missing image to stack", db)
 	else:

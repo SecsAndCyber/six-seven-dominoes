@@ -6,22 +6,34 @@ var dominos_reset:Array[bool] = []
 var domino_drawn: DominoBlock = null
 @export var collection_speed : float = 0.10
 @onready var float_point: Node3D = $FloatPoint
+@onready var wild_card_location: Node3D = $WildCardLocation
+var domino_prefab_scene = preload("res://scenes/domino_block.tscn")
+
 var rotation_tween = null
 var lifted: bool = false
 var rotated: bool = false
 var ready_to_set: bool = false
+var has_wild_card : bool = false
 
 func start_setting_domino(db: DominoBlock):
 	db.freeze = true
+	db.surface_material.render_priority = db.surface_material.RENDER_PRIORITY_MAX
 	db.set_collision_layer_value(2, false)
 	rotation_tween = create_tween()
-	var target_rotation = Quaternion.from_euler(Vector3(0, PI/2, PI/2))
-	rotation_tween.tween_property(db, "quaternion", target_rotation, 0.6)\
-		.set_trans(Tween.TRANS_BACK)\
-		.set_ease(Tween.EASE_OUT)
-	rotation_tween.finished.connect(func(): rotated = true)
-	lifted = false
+	if not db.is_wildcard:
+		var target_rotation = Quaternion.from_euler(Vector3(0, PI/2, PI/2))
+		rotation_tween.tween_property(db, "quaternion", target_rotation, 0.6)\
+			.set_trans(Tween.TRANS_BACK)\
+			.set_ease(Tween.EASE_OUT)
+		rotation_tween.finished.connect(func(): rotated = true)
+	else:
+		var target_rotation = Quaternion.from_euler(Vector3(0, PI/2, 0))
+		rotation_tween.tween_property(db, "quaternion", target_rotation, 0.6)\
+			.set_trans(Tween.TRANS_BACK)\
+			.set_ease(Tween.EASE_OUT)
+		rotation_tween.finished.connect(func(): rotated = true)
 	rotated = false
+	lifted = false
 	ready_to_set = false
 	domino_drawn = db
 	_ready_done = true
@@ -45,6 +57,18 @@ func fix_ordering():
 	
 
 func _process(delta: float) -> void:
+	if GameManager.click_streak >= 5 and not has_wild_card:
+		has_wild_card = true
+		var wild_card_db = domino_prefab_scene.instantiate()
+		wild_card_db.name = "WildCardDominoBlock"
+		if dominos_in_hand.size() > 4:
+			wild_card_db.freeze = true
+		wild_card_db.is_wildcard = true
+		wild_card_db.set_collision_layer_value(1, false)
+		wild_card_db.set_collision_layer_value(2, true)
+		add_child(wild_card_db)
+		wild_card_db.global_transform = wild_card_location.global_transform
+		dominos_in_hand.append(wild_card_db)
 	if not domino_drawn == null:
 		if domino_drawn.global_transform.origin.y < float_point.global_transform.origin.y:
 			domino_drawn.global_transform.origin.y = clampf(
@@ -54,17 +78,19 @@ func _process(delta: float) -> void:
 			)
 		else:
 			lifted = true
-		if lifted and rotated:
+		if rotated:
 			if domino_drawn.global_transform.origin.z > float_point.global_transform.origin.z:
 				domino_drawn.global_transform.origin.z = clampf(
 					domino_drawn.global_transform.origin.z - collection_speed * delta,
 					float_point.global_transform.origin.z,
 					domino_drawn.global_transform.origin.z
 				)
-			else:
+			elif lifted:
 				ready_to_set = true
 		if ready_to_set:
 			domino_drawn.freeze = false
+			if domino_drawn.name == "WildCardDominoBlock":
+				has_wild_card = false
 			GameManager.get_capture_point().collect_new_domino(domino_drawn, true)
 			domino_drawn = null
 

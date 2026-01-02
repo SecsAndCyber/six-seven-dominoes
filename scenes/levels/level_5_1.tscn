@@ -21,7 +21,7 @@ size = Vector2(40, 16)
 
 [node name="TableSpace" type="Node3D"]
 script = ExtResource("1_6sten")
-next_level = "res://scenes/levels/level_6_1.tscn"
+next_level = "res://scenes/levels/level_5_2.tscn"
 
 [node name="CapturePoint" parent="." instance=ExtResource("2_03fym")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.5219994, 0.25, 6.5)

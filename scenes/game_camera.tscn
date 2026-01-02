@@ -1,11 +1,18 @@
 [gd_scene load_steps=2 format=3 uid="uid://dro31wxbi680v"]
 
 [sub_resource type="Environment" id="Environment_5ildb"]
-background_energy_multiplier = 10.0
+background_energy_multiplier = 4.0
+ambient_light_source = 3
 ambient_light_color = Color(1, 1, 1, 1)
-ambient_light_energy = 10.0
+tonemap_mode = 3
+tonemap_white = 0.5
 ssao_enabled = true
 ssil_enabled = true
+glow_intensity = 0.2
+glow_bloom = 1.0
+glow_hdr_threshold = 3.0
+glow_hdr_scale = 4.0
+glow_hdr_luminance_cap = 256.0
 
 [node name="Camera3D" type="Camera3D"]
 transform = Transform3D(1, 0, 0, 0, 0.26927286, 0.96306396, 0, -0.96306396, 0.26927286, 0, 0, 0)
@@ -16,8 +23,11 @@ far = 100.0
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.41712725, 0.7032206, 0.57574797, -0.75758314, -0.08092095, 0.6477033, 0.50206834, -0.7063516, 0.49899366, 0, 10, 0)
-light_color = Color(0.39308554, 0.3930855, 0.39308548, 1)
-light_energy = 5.0
+light_color = Color(0.72464263, 0.7246426, 0.7246426, 1)
+light_energy = 1.2
+light_indirect_energy = 0.0
+light_volumetric_fog_energy = 0.0
+light_specular = 5.0
 shadow_enabled = true
 sky_mode = 1
 

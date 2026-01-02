@@ -45,8 +45,7 @@ var dominos_in_zone: Dictionary = {} # Using a Dictionary as a Set
 var surface_material : StandardMaterial3D = null
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	if not is_wildcard:
-		debug_mesh.queue_free()
+	debug_mesh.queue_free()
 
 func _enter_tree() -> void:
 	look_update_needed = true

@@ -48,7 +48,6 @@ func _process(delta: float) -> void:
 func setup_active_block():
 	active_block.freeze = true
 	active_block.set_collision_layer_value(1, false)
-	print(active_block, is_instance_valid(active_block))
 	var cbr = compute_block_rotation(active_block)
 	active_block.rotation = cbr
 	

@@ -7,6 +7,8 @@ extends Node3D
 @onready var camera_3d: Camera3D = $Camera3D
 @onready var streak_label: Label3D = $Camera3D/StreakLabel
 # Called when the node enters the scene tree for the first time.
+
+var max_pair_domino: DominoBlock = null
 func _ready() -> void:
 	var live_dominos: Array[DominoBlock] = []
 	var stack_height = 0
@@ -42,11 +44,16 @@ func _ready() -> void:
 			assert(t <= 7)
 		else:
 			b_index += 1
+	var max_pair:Vector2i
 	for db in domino_values:
 		prints("(%d,%d)" % [db.x, db.y])
+		max_pair = db
+	print("Max Found! ", max_pair)
 	domino_values.shuffle()
 	b_index = 0
 	for db in live_dominos:
+		if max_pair == domino_values[b_index]:
+			max_pair_domino = db
 		db.value_t = domino_values[b_index].x
 		db.value_b = domino_values[b_index].y
 		b_index += 1
@@ -57,7 +64,11 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 const LEVEL_RESET_DELAY: int = 250 # .25 second in milliseconds
 func _process(_delta: float) -> void:
-	print(table_top.get_node("TableTop2").get_active_material(0).albedo_color)
+	if not null == max_pair_domino and not null == max_pair_domino.surface_material:
+		var pips_node = max_pair_domino.get_node('MeshContainer').find_child('RenderTopPip',true, false)
+		table_top.get_node("TableTop2").get_active_material(0).albedo_color = \
+			pips_node.get_active_material(1).albedo_color
+		max_pair_domino = null # We have set the table color
 	streak_label.text = "%s Streak" % ["•".repeat(GameManager.click_streak)]
 	if GameManager.level_complete == 0xDEADBEEF:
 		return GameManager.advance_to_level("res://scenes/loss_menu.tscn", true)
@@ -65,7 +76,8 @@ func _process(_delta: float) -> void:
 		GameManager.last_played = next_level
 		GameManager.advance_to_level(next_level)
 	if GameManager.hand_dominos.size() == 0 and GameManager.board_dominos.size() > 0:
-		var lost = not hand.has_wild_card
+		var lost = (not hand.has_wild_card and
+						not GameManager.get_capture_point().active_block.is_wildcard)
 		for bd in GameManager.board_dominos:
 			if GameManager.active_capture_point and bd.face == "up":
 				if bd.value_b in GameManager.get_capture_point().current_values:

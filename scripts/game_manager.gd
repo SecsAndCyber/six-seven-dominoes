@@ -99,7 +99,8 @@ func advance_to_level(level_path:String, allow_main_menu:bool=false) -> void:
 		if not "/levels/" in last_played:
 			level_path = STARTING_LEVEL
 	save_state()
-	get_tree().change_scene_to_file(level_path)
+	if not OK == get_tree().change_scene_to_file(level_path):
+		get_tree().change_scene_to_file(STARTING_LEVEL)
 
 func _notification(what):
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:

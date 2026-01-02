@@ -39,12 +39,19 @@ var start_flip: String = ""
 @onready var area_3d: Area3D = $Area3D
 @onready var mesh_container: Node3D = $MeshContainer
 @onready var debug_mesh: MeshInstance3D = $DebugMesh
+@onready var wild_glitter_light: SpotLight3D = $Area3D/WildGlitter
 
 var dominos_in_zone: Dictionary = {} # Using a Dictionary as a Set
 @onready var current_renderer = ProjectSettings.get_setting("rendering/renderer/rendering_method")
 var surface_material : StandardMaterial3D = null
 # Called when the node enters the scene tree for the first time.
+var noise:FastNoiseLite
+var noise_tex:NoiseTexture2D
 func _ready() -> void:
+	noise = FastNoiseLite.new()
+	noise.frequency = 0.17 # High frequency = tiny sparkles
+	noise_tex = NoiseTexture2D.new()
+	noise_tex.noise = noise
 	debug_mesh.queue_free()
 
 func _enter_tree() -> void:
@@ -119,14 +126,20 @@ func _process(delta: float) -> void:
 		update_domino_look()
 	if not null == surface_material:
 		if is_wildcard:
+			wild_glitter_light.visible = true
+			wild_glitter_light.light_energy = randf_range(0.8, 1.2)
+			noise.seed = randi()
+			surface_material.roughness_texture = noise_tex
 			surface_material.albedo_color = "#ffdd00"
-			surface_material.metallic = .90
-			surface_material.roughness = .1
+			surface_material.metallic = .35
+			surface_material.roughness = 1.0
+			surface_material.metallic_specular = 1.0
 			surface_material.emission = "#ffdd00"
-			surface_material.emission_operator = surface_material.EMISSION_OP_MULTIPLY
+			surface_material.emission_operator = surface_material.EMISSION_OP_ADD
 			surface_material.emission_enabled = true
-			surface_material.emission_energy_multiplier = 1000
+			surface_material.emission_energy_multiplier = .12
 		else:
+			wild_glitter_light.visible = false
 			surface_material.albedo_color = "#ffffff"
 			surface_material.metallic = 0
 			surface_material.roughness = 1.0

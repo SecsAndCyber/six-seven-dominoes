@@ -32,6 +32,7 @@ debug_color = Color(0.6431373, 0.18039216, 0.2, 1)
 
 [node name="WildGlitter" type="SpotLight3D" parent="Area3D"]
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -2.2188187, 0.9649863, 0)
+visible = false
 layers = 1023
 spot_range = 8.340006
 spot_angle = 46.70033

@@ -67,8 +67,6 @@ var id: Vector2i:
 			_id.y = b
 		return _id
 		
-			
-@export var rolling_force: float = 10
 var start_flip: String = ""
 @export var rotation_speed: float = 25
 @onready var area_3d: Area3D = $Area3D

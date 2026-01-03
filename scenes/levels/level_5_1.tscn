@@ -6,6 +6,7 @@
 [node name="Level_5_1" type="Node3D"]
 
 [node name="TableSpace" parent="." instance=ExtResource("2_41iwy")]
+next_level = "res://scenes/levels/level_5_2.tscn"
 
 [node name="DominoBlock" parent="TableSpace" instance=ExtResource("4_cdemx")]
 transform = Transform3D(2.5861943e-10, 0.0059166052, 0.9999826, 1, -4.371139e-08, -6.735088e-18, 4.3710624e-08, 0.9999826, -0.0059166052, 0.10102007, 0.4431497, -0.19729328)

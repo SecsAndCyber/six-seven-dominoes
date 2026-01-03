@@ -2,7 +2,42 @@
 class_name DominoBlock
 extends RigidBody3D
 
-var is_wildcard = false
+var WILDGOLD_COLOR:Color = "#ffdd00"
+var STANDARD_COLOR:Color = "#ffffff"
+
+var _is_wildcard:bool = false
+var is_wildcard:
+	get(): return _is_wildcard
+	set(val):
+		if init_pending:
+			look_update_needed = true
+			_is_wildcard = val
+			return
+		if not (null == noise and null == surface_material):
+			if val:
+				wild_glitter_light.light_energy = randf_range(0.8, 1.2)
+				noise.seed = randi()
+				wild_glitter_light.visible = true
+				surface_material.roughness_texture = noise_tex
+				surface_material.albedo_color = WILDGOLD_COLOR
+				surface_material.metallic = .35
+				surface_material.roughness = 1.0
+				surface_material.metallic_specular = 1.0
+				surface_material.emission = WILDGOLD_COLOR
+				surface_material.emission_operator = surface_material.EMISSION_OP_ADD
+				surface_material.emission_enabled = true
+				surface_material.emission_energy_multiplier = .12
+			else:
+				wild_glitter_light.visible = false
+				surface_material.albedo_color = STANDARD_COLOR
+				surface_material.metallic = 0
+				surface_material.roughness = 1.0
+				surface_material.emission_enabled = false
+		if not _is_wildcard == val:
+			look_update_needed = true
+			_is_wildcard = val
+
+@export var init_pending = true
 var look_update_needed = false
 @export_range(0,7) var value_t: int = 5:
 	set(val):
@@ -52,10 +87,12 @@ func _ready() -> void:
 	noise.frequency = 0.17 # High frequency = tiny sparkles
 	noise_tex = NoiseTexture2D.new()
 	noise_tex.noise = noise
+	wild_glitter_light.visible = false
 	debug_mesh.queue_free()
 
 func _enter_tree() -> void:
 	look_update_needed = true
+	is_wildcard = _is_wildcard
 	
 func _exit_tree() -> void:
 	if mesh_container.get_child_count() > 0:
@@ -70,6 +107,8 @@ func replace(db:DominoBlock):
 	look_update_needed = true
 
 func update_domino_look():
+	if init_pending:
+		return
 	if not is_inside_tree(): 
 		return
 	if mesh_container == null:
@@ -83,20 +122,31 @@ func update_domino_look():
 	var image: Node3D
 	if is_wildcard:
 		image = DominoStack.wildcard_domino
-		mesh_container.add_child(image)
+		if image.get_parent() == mesh_container:
+			printerr("Adding without resetting")
+		elif null != image.get_parent():
+			printerr("Orphan wild card!")
+		else:
+			mesh_container.add_child(image)
 	else:
 		image = DominoStack.draw_from_stack(id, mesh_container)
 		if image == null:
 			printerr("Inable to draw", self)
 			return
-	if current_renderer == "mobile":
-		for child in image.get_children():
-			var mat = child.get_active_material(0).duplicate()
-			if "TableTop" == get_parent().name:
-				mat.render_priority = global_transform.origin.y * 10
-			child.set_surface_override_material(0, mat)
-			if child.name == "Surface":
-				surface_material = mat
+	for child in image.get_children():
+		var mat = child.get_active_material(0).duplicate()
+		if "TableTop" == get_parent().name:
+			mat.render_priority = global_transform.origin.y * 10
+		child.set_surface_override_material(0, mat)
+		if child.name == "Surface":
+			surface_material = mat
+			surface_material.albedo_color = STANDARD_COLOR
+			surface_material.metallic = 0
+			surface_material.roughness = 1.0
+			surface_material.emission_enabled = false
+			surface_material.roughness_texture = null
+			surface_material.metallic_specular = 0
+			surface_material.emission_enabled = false
 	# Fixed assignment of large on top
 	if id.y==value_t and not id.x==id.y:
 		mesh_container.rotation = Vector3.RIGHT * PI
@@ -105,9 +155,8 @@ func update_domino_look():
 
 	if face == "up":
 		mesh_container.rotation.y = 0
-		if current_renderer == "mobile":
-			if surface_material.render_priority < surface_material.RENDER_PRIORITY_MAX:
-				surface_material.render_priority = global_transform.origin.y * 10 + 1
+		if surface_material.render_priority < surface_material.RENDER_PRIORITY_MAX:
+			surface_material.render_priority = int(global_transform.origin.y * 10 + 1)
 	elif face == "down":
 		mesh_container.rotation.y = PI
 
@@ -119,6 +168,8 @@ func _to_string() -> String:
 	})
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	if init_pending:
+		return
 	if not is_inside_tree():
 		return
 	if look_update_needed:
@@ -126,24 +177,10 @@ func _process(delta: float) -> void:
 		update_domino_look()
 	if not null == surface_material:
 		if is_wildcard:
-			wild_glitter_light.visible = true
+			if not wild_glitter_light.visible or not surface_material.albedo_color == WILDGOLD_COLOR:
+				is_wildcard = _is_wildcard
 			wild_glitter_light.light_energy = randf_range(0.8, 1.2)
 			noise.seed = randi()
-			surface_material.roughness_texture = noise_tex
-			surface_material.albedo_color = "#ffdd00"
-			surface_material.metallic = .35
-			surface_material.roughness = 1.0
-			surface_material.metallic_specular = 1.0
-			surface_material.emission = "#ffdd00"
-			surface_material.emission_operator = surface_material.EMISSION_OP_ADD
-			surface_material.emission_enabled = true
-			surface_material.emission_energy_multiplier = .12
-		else:
-			wild_glitter_light.visible = false
-			surface_material.albedo_color = "#ffffff"
-			surface_material.metallic = 0
-			surface_material.roughness = 1.0
-			surface_material.emission_enabled = false
 	# If we are in the editor, stop here and don't run tick logic
 	if Engine.is_editor_hint():
 		return
@@ -216,3 +253,6 @@ func _on_area_3d_body_exited(_body: Node3D) -> void:
 
 func _on_area_3d_body_entered(_body: Node3D) -> void:
 	pass
+
+func _on_sleeping_state_changed() -> void:
+	pass #is_wildcard = _is_wildcard

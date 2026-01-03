@@ -59,7 +59,7 @@ func fix_ordering():
 func _process(delta: float) -> void:
 	if GameManager.click_streak >= 5 and not has_wild_card:
 		has_wild_card = true
-		var wild_card_db = domino_prefab_scene.instantiate()
+		var wild_card_db: DominoBlock = domino_prefab_scene.instantiate()
 		wild_card_db.name = "WildCardDominoBlock"
 		if dominos_in_hand.size() > 4:
 			wild_card_db.freeze = true
@@ -69,6 +69,7 @@ func _process(delta: float) -> void:
 		add_child(wild_card_db)
 		wild_card_db.global_transform = wild_card_location.global_transform
 		dominos_in_hand.append(wild_card_db)
+		wild_card_db.init_pending = false
 	if not domino_drawn == null:
 		if domino_drawn.global_transform.origin.y < float_point.global_transform.origin.y:
 			domino_drawn.global_transform.origin.y = clampf(
@@ -103,6 +104,8 @@ func touched():
 		return # Exit early if called too soon
 	if not domino_drawn == null:
 		return # Already moving a domino from hand
+	if GameManager.get_capture_point().active_block.is_wildcard:
+		return # Don't override a pending wildcard
 	# Update the timestamp for the next valid touch
 	last_touch_time = current_time
 	if GameManager.get_capture_point():

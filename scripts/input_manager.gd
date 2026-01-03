@@ -21,6 +21,9 @@ func _perform_raycast(screen_pos: Vector2) -> void:
 	if GameManager.level_complete == 0xDEADBEEF: return
 	if get_viewport() == null: return
 	if get_active_camera() == null: return
+	if not GameManager.active_game_level == null:
+		if GameManager.active_game_level.pre_loss:
+			return
 	# 1. Calculate the start and end points of the ray
 	var ray_origin = get_active_camera().project_ray_origin(screen_pos)
 	var ray_end = ray_origin + get_active_camera().project_ray_normal(screen_pos) * 2000.0 # Length of ray

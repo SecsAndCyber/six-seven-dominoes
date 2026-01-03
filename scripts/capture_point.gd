@@ -1,7 +1,7 @@
 class_name CapturePoint
 extends Node3D
 
-@onready var active_block: DominoBlock = $DominoBlock
+@onready var active_block: DominoBlock = $ActiveDominoBlock
 var moving_block: DominoBlock = null
 @onready var float_point: Node3D = $FloatPoint
 

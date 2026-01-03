@@ -47,6 +47,7 @@ var click_streak : int = 0
 var level_complete : int = 0
 var dominos_abandoned : int = 0
 
+var active_game_level: DominosLevel
 var active_capture_point: Node3D
 func get_capture_point() -> CapturePoint:
 	return active_capture_point as CapturePoint
@@ -65,9 +66,10 @@ func remove_domino(db: DominoBlock):
 	return null
 
 func _ready() -> void:
-	prepare_level()
+	prepare_level(null)
 
-func prepare_level() -> void:
+func prepare_level(dl:DominosLevel) -> void:
+	active_game_level = dl
 	level_complete = false
 	board_dominos = []
 	hand_dominos = []

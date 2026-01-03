@@ -39,5 +39,6 @@ spot_angle = 46.70033
 [node name="DebugMesh" type="MeshInstance3D" parent="."]
 mesh = SubResource("BoxMesh_i8mxf")
 
+[connection signal="sleeping_state_changed" from="." to="." method="_on_sleeping_state_changed"]
 [connection signal="body_entered" from="Area3D" to="." method="_on_area_3d_body_entered"]
 [connection signal="body_exited" from="Area3D" to="." method="_on_area_3d_body_exited"]

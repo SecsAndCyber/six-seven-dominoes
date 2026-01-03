@@ -1,3 +1,4 @@
+class_name DominosLevel
 extends Node3D
 
 @export var next_level: String
@@ -7,26 +8,35 @@ extends Node3D
 @onready var camera_3d: Camera3D = $Camera3D
 @onready var streak_label: Label3D = $Camera3D/StreakLabel
 # Called when the node enters the scene tree for the first time.
-
+var pre_loss:bool = false
 var max_pair_domino: DominoBlock = null
+	
 func _ready() -> void:
+	pre_loss = false
+	for child in get_children():
+		if child is DominoBlock:
+			remove_child(child)
+			table_top.add_child(child)
 	var live_dominos: Array[DominoBlock] = []
 	var stack_height = 0
-	GameManager.prepare_level()
+	GameManager.prepare_level(self)
 	var _board_dominos: Array[DominoBlock] = []
 	for child in table_top.get_children():
 		if child is DominoBlock:
 			stack_height = max(stack_height, child.global_transform.origin.y)
 			_board_dominos.append(child)
+			child.init_pending = false
 	GameManager.board_dominos = _board_dominos
 	var _hand_dominos: Array[DominoBlock] = []
 	for child in hand.get_children():
 		if child is DominoBlock:
 			_hand_dominos.append(child)
+			child.init_pending = false
 	GameManager.hand_dominos = _hand_dominos
 	for child in capture_point.get_children():
 		if child is DominoBlock:
 			live_dominos.append(child)
+			child.init_pending = false
 	live_dominos += _board_dominos + _hand_dominos
 	print(live_dominos.size(), " dominos in play")
 	
@@ -77,19 +87,30 @@ func _process(_delta: float) -> void:
 		GameManager.advance_to_level(next_level)
 	if GameManager.hand_dominos.size() == 0 and GameManager.board_dominos.size() > 0:
 		var lost = (not hand.has_wild_card and
-						not GameManager.get_capture_point().active_block.is_wildcard)
+						not GameManager.get_capture_point().active_block.is_wildcard
+					)
 		for bd in GameManager.board_dominos:
 			if GameManager.active_capture_point and bd.face == "up":
 				if bd.value_b in GameManager.get_capture_point().current_values:
 					lost = false
 				if bd.value_t in GameManager.get_capture_point().current_values:
 					lost = false
+		if not null == GameManager.get_capture_point().moving_block:
+			lost = false
 		if lost:
-			GameManager.level_complete = 0xDEADBEEF
+			pre_loss = true
+			get_tree().create_timer(LEVEL_RESET_DELAY / 100).timeout.connect(
+				func():
+					GameManager.level_complete = 0xDEADBEEF
+			)
 
-func is_game_active():
+func is_game_active() -> bool:
+	if pre_loss:
+		return false
 	if GameManager.board_dominos.size() == 0:
 		GameManager.level_complete = Time.get_ticks_msec() + LEVEL_RESET_DELAY
+		return false
+	return true
 
 func _on_table_top_child_exiting_tree(node: Node) -> void:
 	node.tree_exited.connect(func():is_game_active())

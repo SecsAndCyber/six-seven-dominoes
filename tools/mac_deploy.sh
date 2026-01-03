@@ -1,5 +1,5 @@
 
-VERSION=${VERSION:="1.0.2"}
+VERSION=${VERSION:="1.0.4"}
 PROJECT="67Dominos"
 
 FULL_PATH_TO_SCRIPT="$(realpath "${BASH_SOURCE[0]}")"

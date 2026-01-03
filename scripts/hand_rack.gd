@@ -60,15 +60,16 @@ func _process(delta: float) -> void:
 	if GameManager.click_streak >= 5 and not has_wild_card:
 		has_wild_card = true
 		var wild_card_db: DominoBlock = domino_prefab_scene.instantiate()
+		wild_card_db.is_wildcard = true
 		wild_card_db.name = "WildCardDominoBlock"
 		if dominos_in_hand.size() > 4:
 			wild_card_db.freeze = true
-		wild_card_db.is_wildcard = true
 		wild_card_db.set_collision_layer_value(1, false)
 		wild_card_db.set_collision_layer_value(2, true)
 		add_child(wild_card_db)
 		wild_card_db.global_transform = wild_card_location.global_transform
 		dominos_in_hand.append(wild_card_db)
+		wild_card_db.is_wildcard = true
 		wild_card_db.init_pending = false
 	if not domino_drawn == null:
 		if domino_drawn.global_transform.origin.y < float_point.global_transform.origin.y:

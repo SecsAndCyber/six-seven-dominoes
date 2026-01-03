@@ -91,4 +91,15 @@ func validate_stack():
 		if idle_dominoes[id].is_inside_tree():
 			printerr("Leaked domino:", id)
 			continue
-			
+
+func _exit_tree() -> void:
+	validate_stack()
+	# --- THE FIX: Clear the pool to prevent leaks ---
+	for id in idle_dominoes:
+		var node = idle_dominoes[id]
+		if is_instance_valid(node):
+			node.queue_free()
+	idle_dominoes.clear()
+	
+	if is_instance_valid(wildcard_domino):
+		wildcard_domino.queue_free()

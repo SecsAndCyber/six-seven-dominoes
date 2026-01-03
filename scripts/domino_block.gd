@@ -91,13 +91,20 @@ func _ready() -> void:
 	debug_mesh.queue_free()
 
 func _enter_tree() -> void:
-	init_pending = get_parent() is DominosLevel
 	look_update_needed = true
 	is_wildcard = _is_wildcard
 	
 func _exit_tree() -> void:
 	if mesh_container.get_child_count() > 0:
 		DominoStack.return_to_stack(self)
+
+func _notification(what):
+	if what == NOTIFICATION_PREDELETE:
+		# Final cleanup: This is where you kill RIDs
+		surface_material = null
+		noise_tex.noise = null
+		noise = null
+		noise_tex = null
 
 func replace(db:DominoBlock):
 	DominoStack.return_to_stack(self)
@@ -135,19 +142,29 @@ func update_domino_look():
 			printerr("Inable to draw", self)
 			return
 	for child in image.get_children():
-		var mat = child.get_active_material(0).duplicate()
+		var mat = child.get_active_material(0)
 		if "TableTop" == get_parent().name:
 			mat.render_priority = global_transform.origin.y * 10
-		child.set_surface_override_material(0, mat)
 		if child.name == "Surface":
-			surface_material = mat
-			surface_material.albedo_color = STANDARD_COLOR
-			surface_material.metallic = 0
-			surface_material.roughness = 1.0
-			surface_material.emission_enabled = false
-			surface_material.roughness_texture = null
-			surface_material.metallic_specular = 0
-			surface_material.emission_enabled = false
+			if surface_material == null:
+				surface_material = mat.duplicate()
+				surface_material.albedo_color = STANDARD_COLOR
+				surface_material.metallic = 0
+				surface_material.roughness = 1.0
+				surface_material.emission_enabled = false
+				surface_material.roughness_texture = null
+				surface_material.metallic_specular = 0
+				surface_material.emission_enabled = false
+				child.set_surface_override_material(0, mat)
+			else:
+				surface_material.albedo_color = STANDARD_COLOR
+				surface_material.metallic = 0
+				surface_material.roughness = 1.0
+				surface_material.emission_enabled = false
+				surface_material.roughness_texture = null
+				surface_material.metallic_specular = 0
+				surface_material.emission_enabled = false
+				child.set_surface_override_material(0, surface_material)
 	# Fixed assignment of large on top
 	if id.y==value_t and not id.x==id.y:
 		mesh_container.rotation = Vector3.RIGHT * PI
@@ -250,7 +267,6 @@ func _on_area_3d_body_exited(_body: Node3D) -> void:
 		face = "up"
 	else:
 		face = "down"
-
 
 func _on_area_3d_body_entered(_body: Node3D) -> void:
 	pass

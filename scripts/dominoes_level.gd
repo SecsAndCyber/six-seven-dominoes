@@ -7,9 +7,11 @@ extends Node3D
 @onready var capture_point: CapturePoint = $CapturePoint
 @onready var camera_3d: Camera3D = $Camera3D
 @onready var streak_label: Label3D = $Camera3D/StreakLabel
+@onready var debug_label: Label3D = $Camera3D/DebugLabel
 # Called when the node enters the scene tree for the first time.
 var pre_loss:bool = false
 var max_pair_domino: DominoBlock = null
+var ready_done:bool = false
 	
 func _ready() -> void:
 	pre_loss = false
@@ -38,8 +40,13 @@ func _ready() -> void:
 			live_dominos.append(child)
 			child.init_pending = false
 	live_dominos += _board_dominos + _hand_dominos
-	print(live_dominos.size(), " dominos in play")
+	shuffle_live_dominoes(live_dominos)
 	
+	capture_point.float_point.global_transform.origin.y = stack_height
+	capture_point.init()
+	ready_done = true
+
+func shuffle_live_dominoes(live_dominos):
 	var domino_values: Array[Vector2i] = []
 	var t: int = 0
 	var bs: Array[int] = []
@@ -56,7 +63,6 @@ func _ready() -> void:
 			b_index += 1
 	var max_pair:Vector2i
 	for db in domino_values:
-		prints("(%d,%d)" % [db.x, db.y])
 		max_pair = db
 	print("Max Found! ", max_pair)
 	domino_values.shuffle()
@@ -68,12 +74,18 @@ func _ready() -> void:
 		db.value_b = domino_values[b_index].y
 		b_index += 1
 	
-	capture_point.float_point.global_transform.origin.y = stack_height
-	capture_point.init()
-
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 const LEVEL_RESET_DELAY: int = 250 # .25 second in milliseconds
 func _process(_delta: float) -> void:
+	if not ready_done:
+		return
+	if OS.is_debug_build():
+		debug_label.text = "{LevelName} FPS:{FPS}".format({
+			'LevelName':get_node("/root/").get_children()[3].name,
+			'FPS':int(1.0 / _delta)
+		})
+	elif debug_label.text.length() > 0:
+		debug_label.text = ""
 	if not null == max_pair_domino and not null == max_pair_domino.surface_material:
 		var pips_node = max_pair_domino.get_node('MeshContainer').find_child('RenderTopPip',true, false)
 		table_top.get_node("TableTop2").get_active_material(0).albedo_color = \

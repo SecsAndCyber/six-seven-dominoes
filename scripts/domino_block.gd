@@ -1,4 +1,3 @@
-#@tool
 class_name DominoBlock
 extends RigidBody3D
 
@@ -9,34 +8,37 @@ var _is_wildcard:bool = false
 var is_wildcard:
 	get(): return _is_wildcard
 	set(val):
-		if init_pending:
+		if init_pending or null == noise or null == surface_material:
 			look_update_needed = true
 			_is_wildcard = val
 			return
-		if not (null == noise and null == surface_material):
-			if val:
-				wild_glitter_light.light_energy = randf_range(0.8, 1.2)
-				noise.seed = randi()
-				wild_glitter_light.visible = true
-				surface_material.roughness_texture = noise_tex
-				surface_material.albedo_color = WILDGOLD_COLOR
-				surface_material.metallic = .35
-				surface_material.roughness = 1.0
-				surface_material.metallic_specular = 1.0
-				surface_material.emission = WILDGOLD_COLOR
-				surface_material.emission_operator = surface_material.EMISSION_OP_ADD
-				surface_material.emission_enabled = true
-				surface_material.emission_energy_multiplier = .12
-			else:
-				wild_glitter_light.visible = false
-				surface_material.albedo_color = STANDARD_COLOR
-				surface_material.metallic = 0
-				surface_material.roughness = 1.0
-				surface_material.emission_enabled = false
+		# Run this even if the flag isn't changing due to the possiblity
+		# of the originial set happening before all the objects were ready
+		if val:
+			wild_glitter_light.light_energy = randf_range(0.8, 1.2)
+			noise.seed = randi()
+			wild_glitter_light.visible = true
+			surface_material.roughness_texture = noise_tex
+			surface_material.albedo_color = WILDGOLD_COLOR
+			surface_material.metallic = .35
+			surface_material.roughness = 1.0
+			surface_material.metallic_specular = 1.0
+			surface_material.emission = WILDGOLD_COLOR
+			surface_material.emission_operator = surface_material.EMISSION_OP_ADD
+			surface_material.emission_enabled = true
+			surface_material.emission_energy_multiplier = .12
+		else:
+			wild_glitter_light.visible = false
+			surface_material.albedo_color = STANDARD_COLOR
+			surface_material.metallic = 0
+			surface_material.roughness = 1.0
+			surface_material.emission_enabled = false
 		if not _is_wildcard == val:
 			look_update_needed = true
 			_is_wildcard = val
 
+# init_pending is set by the stage once the tree location has stabilized
+# Designer note: Set this as false if the parent isn't DominoLevel
 @export var init_pending = true
 var look_update_needed = false
 @export_range(0,7) var value_t: int = 5:
@@ -89,6 +91,7 @@ func _ready() -> void:
 	debug_mesh.queue_free()
 
 func _enter_tree() -> void:
+	init_pending = get_parent() is DominosLevel
 	look_update_needed = true
 	is_wildcard = _is_wildcard
 	
@@ -164,6 +167,7 @@ func _to_string() -> String:
 		'value_b':value_b,
 		'draw_order':surface_material.render_priority if not null == surface_material else 0
 	})
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	if init_pending:
@@ -175,13 +179,14 @@ func _process(delta: float) -> void:
 		update_domino_look()
 	if not null == surface_material:
 		if is_wildcard:
-			if not wild_glitter_light.visible or not surface_material.albedo_color == WILDGOLD_COLOR:
-				is_wildcard = _is_wildcard
+			# Check to see if the visual effect is not correct
+			if (not wild_glitter_light.visible or
+				not surface_material.albedo_color == WILDGOLD_COLOR):
+					# Trigger the missing visual effects
+					is_wildcard = _is_wildcard
+			# These cause a flicker TODO: Implement this as a shader
 			wild_glitter_light.light_energy = randf_range(0.8, 1.2)
 			noise.seed = randi()
-	# If we are in the editor, stop here and don't run tick logic
-	if Engine.is_editor_hint():
-		return
 
 	if under_dominos():
 		face = "down"
@@ -204,11 +209,6 @@ func _process(delta: float) -> void:
 					start_flip = "" if start_flip == face else face
 			else:
 				start_flip = "" if start_flip == face else face
-	
-func _physics_process(_delta):
-	# If we are in the editor, stop here and don't run physics logic
-	if Engine.is_editor_hint():
-		return
 
 var last_touch_time: int = 0
 const TOUCH_DELAY_MS: int = 100 # .1 second in milliseconds
@@ -225,6 +225,9 @@ func touched():
 	print("Touched ", face, " on ", self, " to test ", GameManager.get_capture_point())
 	if face=="up" and GameManager.get_capture_point():
 		if GameManager.get_capture_point().collectable:
+			if Input.is_key_pressed(KEY_CTRL) or Input.is_key_pressed(KEY_META):
+				# Cross-platform check
+				GameManager.get_capture_point().collect_new_domino(self)
 			if GameManager.get_capture_point().test_collection(self):
 				if not GameManager.get_capture_point().active_block.is_wildcard:
 					GameManager.click_streak += 1
@@ -238,8 +241,8 @@ func under_dominos() -> bool:
 	for body in area_3d.get_overlapping_bodies():
 		if body is DominoBlock:
 			if body.get_parent() == get_parent():
-				# ignore any moving blocks
 				return true
+			# ignore any moving blocks
 	return false
 
 func _on_area_3d_body_exited(_body: Node3D) -> void:
@@ -253,4 +256,4 @@ func _on_area_3d_body_entered(_body: Node3D) -> void:
 	pass
 
 func _on_sleeping_state_changed() -> void:
-	pass #is_wildcard = _is_wildcard
+	pass

@@ -35,3 +35,8 @@ sky_mode = 1
 transform = Transform3D(1, 0, 0, 0, 0.9999996, 0, 0, 0, 0.9999996, 2.7794065, 1.4671142, -2.0679822)
 layers = 512
 horizontal_alignment = 2
+
+[node name="DebugLabel" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.9999989, 0, 0, 0, 0.9999989, -5.0091157, 2.6366417, -3.7388773)
+text = "DEV"
+horizontal_alignment = 0

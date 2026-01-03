@@ -90,7 +90,7 @@ func advance_to_level(level_path:String, allow_main_menu:bool=false) -> void:
 			remove_domino(get_capture_point().active_block)
 		active_capture_point = null
 	DominoStack.validate_stack()
-	level_complete = false
+	level_complete = 0
 	board_dominos = []
 	hand_dominos = []
 	if "/levels/" in level_path:

@@ -57,7 +57,6 @@ func return_to_stack(db: Node3D):
 			var image = db.get_node("MeshContainer").get_child(0)
 			if not null == image:
 				image.get_parent().remove_child(image)
-				prints("Returned", db.id, image)
 				if db.is_wildcard:
 					print("Returned wildcard")
 				else:

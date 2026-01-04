@@ -38,7 +38,12 @@ horizontal_alignment = 2
 
 [node name="DebugLabel" type="Label3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.9999989, 0, 0, 0, 0.9999989, -5.0091157, 2.6366417, -3.7388773)
+layers = 512
 text = "DEV"
 horizontal_alignment = 0
 
 [node name="CoinsLabel" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.9999996, 0, 0, 0, 0.9999996, 2.5629344, -1.4257379, -1.9797032)
+layers = 512
+text = "0 Coins"
+horizontal_alignment = 2

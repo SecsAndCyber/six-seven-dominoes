@@ -50,7 +50,7 @@ var coins : int = 0
 # Other values are a timestamp for when the level should change
 # This is a hack while end-of-level modals don't exist
 var level_complete : int = 0
-var level_setting_up : bool = true
+var is_transitioning : bool = true
 var dominos_abandoned : int = 0
 
 var active_game_level: DominosLevel
@@ -61,6 +61,12 @@ func get_capture_point() -> CapturePoint:
 
 var board_dominos: Array[DominoBlock] = []
 var hand_dominos: Array[DominoBlock] = []
+
+func clear_hand():
+	while hand_dominos.size():
+		var db = hand_dominos.pop_back()
+		db.get_parent().remove_child(db)
+		remove_domino(db)
 
 func remove_domino(db: DominoBlock):
 	if board_dominos.has(db):
@@ -75,14 +81,14 @@ func _ready() -> void:
 	prepare_level(null)
 
 func prepare_level(dl:DominosLevel) -> void:
-	level_setting_up = true
+	is_transitioning = true
 	active_game_level = dl
 	level_complete = false
 	board_dominos = []
 	hand_dominos = []
 
 func advance_to_level(level_path:String, allow_main_menu:bool=false) -> void:
-	level_setting_up = true
+	is_transitioning = true
 	var to_remove = board_dominos + hand_dominos
 	if level_complete == 0xDEADBEEF:
 		dominos_abandoned = board_dominos.size()

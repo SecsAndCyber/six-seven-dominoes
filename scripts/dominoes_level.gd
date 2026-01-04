@@ -3,7 +3,7 @@ extends Node3D
 
 @export var next_level: String
 @onready var table_top: StaticBody3D = $TableTop
-@onready var hand: StaticBody3D = $Hand
+@onready var hand: HandRack = $Hand
 @onready var capture_point: CapturePoint = $CapturePoint
 @onready var camera_3d: Camera3D = $Camera3D
 @onready var streak_label: Label3D = $Camera3D/StreakLabel
@@ -13,9 +13,21 @@ extends Node3D
 var pre_loss:bool = false
 var max_pair_domino: DominoBlock = null
 var ready_done:bool = false
-	
+
+func update_ui(_delta:float = 0.0):
+	if OS.is_debug_build():
+		debug_label.text = "{LevelName} FPS:{FPS}".format({
+			'LevelName':get_node("/root/").get_children()[3].name,
+			'FPS':int(1.0 / _delta) if _delta else '??'
+		})
+	elif debug_label.text.length() > 0:
+		debug_label.text = ""
+	streak_label.text = "%s Streak" % ["•".repeat(GameManager.click_streak)]
+	coins_label.text = "%s Coins" % [GameManager.coins]
+
 func _ready() -> void:
 	pre_loss = false
+	update_ui(0)
 	for child in get_children():
 		if child is DominoBlock:
 			remove_child(child)
@@ -46,7 +58,7 @@ func _ready() -> void:
 	capture_point.float_point.global_transform.origin.y = stack_height
 	capture_point.init()
 	ready_done = true
-	GameManager.level_setting_up = false
+	GameManager.is_transitioning = false
 
 func shuffle_live_dominoes(live_dominos):
 	var domino_values: Array[Vector2i] = []
@@ -80,17 +92,9 @@ func shuffle_live_dominoes(live_dominos):
 const LEVEL_RESET_DELAY_MSEC: int = 250 # .25 second in milliseconds
 const LEVEL_RESET_DELAY_SEC: float = LEVEL_RESET_DELAY_MSEC / 100.0
 func _process(_delta: float) -> void:
-	if not ready_done or GameManager.level_setting_up:
+	if not ready_done or GameManager.is_transitioning:
 		return
-	if OS.is_debug_build():
-		debug_label.text = "{LevelName} FPS:{FPS}".format({
-			'LevelName':get_node("/root/").get_children()[3].name,
-			'FPS':int(1.0 / _delta)
-		})
-	elif debug_label.text.length() > 0:
-		debug_label.text = ""
-	streak_label.text = "%s Streak" % ["•".repeat(GameManager.click_streak)]
-	coins_label.text = "%s Coins" % [GameManager.coins]
+	update_ui(_delta)
 	if GameManager.level_complete == 0xDEADBEEF:
 		return GameManager.advance_to_level("res://scenes/loss_menu.tscn", true)
 	if pre_loss:
@@ -116,27 +120,35 @@ func _process(_delta: float) -> void:
 		if not null == GameManager.get_capture_point().moving_block:
 			if lost:
 				lost = false
-		if lost:
+		if lost and not pre_loss:
 			pre_loss = true
 			get_tree().create_timer(LEVEL_RESET_DELAY_SEC).timeout.connect(
 				func():
 					GameManager.level_complete = 0xDEADBEEF
 			)
 
-func is_game_active() -> bool:
+func is_level_won() -> bool:
 	if pre_loss:
 		return false
+	if GameManager.level_complete != 0:
+		return true
 	if GameManager.board_dominos.size() == 0:
+		if GameManager.hand_dominos.size() > 0:
+			var bonus = GameManager.hand_dominos.size()
+			GameManager.coins += bonus
+			print("Bonus coins for remaining hand: ", bonus)
+			# Clear the hand so we don't double-count if _process runs again
+			GameManager.clear_hand()
 		GameManager.level_complete = Time.get_ticks_msec() + LEVEL_RESET_DELAY_MSEC
-		return false
-	return true
+		return true
+	return false
 
 func _on_table_top_child_exiting_tree(node: Node) -> void:
-	node.tree_exited.connect(func():is_game_active())
+	node.tree_exited.connect(func():is_level_won())
 
 
 func _on_hand_child_exiting_tree(node: Node) -> void:
-	node.tree_exited.connect(func():is_game_active())
+	node.tree_exited.connect(func():is_level_won())
 
 #
 # The next step for a polished feel: 

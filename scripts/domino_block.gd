@@ -249,7 +249,11 @@ func touched():
 				GameManager.get_capture_point().collect_new_domino(self)
 			if GameManager.get_capture_point().test_collection(self):
 				if not GameManager.get_capture_point().active_block.is_wildcard:
-					GameManager.click_streak += 1
+					if GameManager.active_game_level.hand.has_wild_card:
+						GameManager.coins += 1
+						print("Coin granted: Matched while holding a wildcard!")
+					else:
+						GameManager.click_streak += 1
 				GameManager.get_capture_point().collect_new_domino(self)
 			else:
 				start_flip = "down" if face == "up" else "up"

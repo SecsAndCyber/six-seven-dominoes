@@ -10,7 +10,7 @@ func _process(_delta):
 	pass
 
 func _input(event):
-	print(event)
+	# print(event)
 	if (event is InputEventMouseButton) and event.is_pressed():
 		_perform_raycast(event.position, event.is_pressed())
 

@@ -1,6 +1,6 @@
 HOST=${HOST:="molyett.com"}
 DEST=${DEST:='~/www/jjg/67Dominos/'}
-VERSION=${VERSION:="1.0.3"}
+VERSION=${VERSION:="1.0.6"}
 PROJECT="67Dominos"
 
 FULL_PATH_TO_SCRIPT="$(realpath "${BASH_SOURCE[0]}")"

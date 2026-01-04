@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="67Dominoes"
-config/version="1.0.4"
+config/version="1.0.6"
 run/main_scene="uid://0jk7qqutmbqj"
 config/features=PackedStringArray("4.5", "GL Compatibility")
 config/icon="uid://de10jor8sdkq5"

@@ -1,3 +1,5 @@
+# This class manages the visual meshes of the Dominos
+# DominoBlock handles the game physics, logic, and memory of the Domino
 class_name DominoStackClass
 extends Node
 
@@ -30,9 +32,6 @@ func _ready():
 	wildcard_domino = domino_factory(Vector2i(0,0))
 	wildcard_domino.name = "WildCardDomino"
 
-func _enter_tree() -> void:
-	print(self, wildcard_domino)
-
 func domino_scene(id) -> String:
 	return "res://scenes/dominos/%s/Domino.%d.%d.tscn" % [skin, id.x, id.y]
 
@@ -58,6 +57,7 @@ func domino_ids() -> Array[Vector2i]:
 	return domino_values
 	
 func return_to_stack(db: Node3D):
+	# Return the mesh node to the stack from DominoBlock
 	if db is DominoBlock:
 		assert(db.get_node("MeshContainer").get_child_count() <= 1,
 				"Too many meshes attached!")
@@ -69,7 +69,6 @@ func return_to_stack(db: Node3D):
 					# orphan the wildcard mesh so that it doesn't get destroyed
 					# on level change. Maintain pointer
 					wildcard_domino = image
-					print("Returned wildcard")
 				else:
 					idle_dominoes[db.id] = image
 			else:

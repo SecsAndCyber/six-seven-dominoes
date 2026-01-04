@@ -8,6 +8,7 @@ extends Node3D
 @onready var camera_3d: Camera3D = $Camera3D
 @onready var streak_label: Label3D = $Camera3D/StreakLabel
 @onready var debug_label: Label3D = $Camera3D/DebugLabel
+@onready var coins_label: Label3D = $Camera3D/CoinsLabel
 # Called when the node enters the scene tree for the first time.
 var pre_loss:bool = false
 var max_pair_domino: DominoBlock = null
@@ -45,6 +46,7 @@ func _ready() -> void:
 	capture_point.float_point.global_transform.origin.y = stack_height
 	capture_point.init()
 	ready_done = true
+	GameManager.level_setting_up = false
 
 func shuffle_live_dominoes(live_dominos):
 	var domino_values: Array[Vector2i] = []
@@ -64,7 +66,7 @@ func shuffle_live_dominoes(live_dominos):
 	var max_pair:Vector2i
 	for db in domino_values:
 		max_pair = db
-	print("Max Found! ", max_pair)
+	print("Level ", max_pair)
 	domino_values.shuffle()
 	b_index = 0
 	for db in live_dominos:
@@ -76,9 +78,9 @@ func shuffle_live_dominoes(live_dominos):
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 const LEVEL_RESET_DELAY_MSEC: int = 250 # .25 second in milliseconds
-const LEVEL_RESET_DELAY_SEC: int = int(LEVEL_RESET_DELAY_MSEC * .001)
+const LEVEL_RESET_DELAY_SEC: float = LEVEL_RESET_DELAY_MSEC / 100.0
 func _process(_delta: float) -> void:
-	if not ready_done:
+	if not ready_done or GameManager.level_setting_up:
 		return
 	if OS.is_debug_build():
 		debug_label.text = "{LevelName} FPS:{FPS}".format({
@@ -87,14 +89,17 @@ func _process(_delta: float) -> void:
 		})
 	elif debug_label.text.length() > 0:
 		debug_label.text = ""
+	streak_label.text = "%s Streak" % ["•".repeat(GameManager.click_streak)]
+	coins_label.text = "%s Coins" % [GameManager.coins]
+	if GameManager.level_complete == 0xDEADBEEF:
+		return GameManager.advance_to_level("res://scenes/loss_menu.tscn", true)
+	if pre_loss:
+		return
 	if not null == max_pair_domino and not null == max_pair_domino.surface_material:
 		var pips_node = max_pair_domino.get_node('MeshContainer').find_child('RenderTopPip',true, false)
 		table_top.get_node("TableTop2").get_active_material(0).albedo_color = \
 			pips_node.get_active_material(1).albedo_color
 		max_pair_domino = null # We have set the table color
-	streak_label.text = "%s Streak" % ["•".repeat(GameManager.click_streak)]
-	if GameManager.level_complete == 0xDEADBEEF:
-		return GameManager.advance_to_level("res://scenes/loss_menu.tscn", true)
 	if GameManager.level_complete and GameManager.level_complete < Time.get_ticks_msec():
 		GameManager.last_played = next_level
 		GameManager.advance_to_level(next_level)
@@ -109,7 +114,8 @@ func _process(_delta: float) -> void:
 				if bd.value_t in GameManager.get_capture_point().current_values:
 					lost = false
 		if not null == GameManager.get_capture_point().moving_block:
-			lost = false
+			if lost:
+				lost = false
 		if lost:
 			pre_loss = true
 			get_tree().create_timer(LEVEL_RESET_DELAY_SEC).timeout.connect(
@@ -131,3 +137,10 @@ func _on_table_top_child_exiting_tree(node: Node) -> void:
 
 func _on_hand_child_exiting_tree(node: Node) -> void:
 	node.tree_exited.connect(func():is_game_active())
+
+#
+# The next step for a polished feel: 
+# Would you like to add a Camera Shake effect to the DominosLevel
+# script that triggers whenever a match is made, or a Haptic Vibration
+# call for when the player tries to make an invalid move?
+#

@@ -18,6 +18,8 @@ static func save_state():
 	if file:
 		file.store_line(JSON.stringify({
 			'CurrentLevel':instance.last_played,
+			'ClickStreak':instance.click_streak,
+			'CoinsCollected':instance.coins,
 		}))
 	else:
 		printerr("Unable to save", instance._save_path)
@@ -31,13 +33,16 @@ static func loadScore():
 		var parse_result = json.parse(json_string)
 		if parse_result == OK:
 			var node_data = json.data
-			instance.last_played=node_data['CurrentLevel']
+			instance.last_played=node_data.get('CurrentLevel')
+			instance.click_streak=node_data.get('ClickStreak', 0)
+			instance.coins=node_data.get('CoinsCollected', 0)
 	else:
-		print("Unable to open", instance._save_path)
+		printerr("Unable to open", instance._save_path)
 	
 # ++++++++++++ Persistent Values
 var last_played : String = ""
 var click_streak : int = 0
+var coins : int = 0
 # ++++++++++++ End Persistent Values
 
 # 0 = not complete
@@ -45,6 +50,7 @@ var click_streak : int = 0
 # Other values are a timestamp for when the level should change
 # This is a hack while end-of-level modals don't exist
 var level_complete : int = 0
+var level_setting_up : bool = true
 var dominos_abandoned : int = 0
 
 var active_game_level: DominosLevel
@@ -61,7 +67,7 @@ func remove_domino(db: DominoBlock):
 		board_dominos.erase(db)
 	if hand_dominos.has(db):
 		hand_dominos.erase(db)
-	DominoStack.return_to_stack(db)
+	# The resulting _exit_tree() will handle the return to stack
 	db.queue_free()
 	return null
 
@@ -69,12 +75,14 @@ func _ready() -> void:
 	prepare_level(null)
 
 func prepare_level(dl:DominosLevel) -> void:
+	level_setting_up = true
 	active_game_level = dl
 	level_complete = false
 	board_dominos = []
 	hand_dominos = []
 
 func advance_to_level(level_path:String, allow_main_menu:bool=false) -> void:
+	level_setting_up = true
 	var to_remove = board_dominos + hand_dominos
 	if level_complete == 0xDEADBEEF:
 		dominos_abandoned = board_dominos.size()
@@ -84,10 +92,17 @@ func advance_to_level(level_path:String, allow_main_menu:bool=false) -> void:
 	else:
 		dominos_abandoned = 0
 	for db in to_remove:
+		db.get_parent().remove_child(db)
 		remove_domino(db)
 	if active_capture_point:
 		if not null == get_capture_point().active_block:
+			get_capture_point().active_block.get_parent(
+				).remove_child(get_capture_point().active_block)
 			remove_domino(get_capture_point().active_block)
+		if not null == get_capture_point().moving_block:
+			get_capture_point().moving_block.get_parent(
+				).remove_child(get_capture_point().moving_block)
+			remove_domino(get_capture_point().moving_block)
 		active_capture_point = null
 	DominoStack.validate_stack()
 	level_complete = 0

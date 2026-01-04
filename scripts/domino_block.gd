@@ -108,12 +108,12 @@ func _exit_tree() -> void:
 
 func _notification(what):
 	if what == NOTIFICATION_PREDELETE:
-		if is_wildcard:
-			print("Predelete Wildcard")
 		# Final cleanup: This is where you kill RIDs
-		surface_material.roughness_texture = null
+		if not null == surface_material:
+			surface_material.roughness_texture = null
 		surface_material = null
-		noise_tex.noise = null
+		if not null == noise_tex:
+			noise_tex.noise = null
 		noise = null
 		noise_tex = null
 
@@ -200,6 +200,8 @@ func _process(delta: float) -> void:
 					# Trigger the missing visual effects
 					is_wildcard = _is_wildcard
 			# These cause a flicker TODO: Implement this as a shader
+			# Due to above check, this only occurs inside the single
+			# Wildcard permitted per screen
 			wild_glitter_light.light_energy = randf_range(0.8, 1.2)
 			noise.seed = randi()
 

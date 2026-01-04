@@ -1,3 +1,4 @@
+class_name LossMenu
 extends Node3D
 
 @onready var label_loss_stat: Label3D = $Camera3D/Splash/Label_Loss_Stat
@@ -16,9 +17,6 @@ func _ready() -> void:
 		label_loss_stat.text = "1 tile left on the table"
 	else:
 		label_loss_stat.text = "%s tiles left on the table" % GameManager.dominos_abandoned
-	
-func _process(delta: float) -> void:
-	pass
 
 
 func _input(event):

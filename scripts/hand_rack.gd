@@ -1,6 +1,7 @@
+class_name HandRack
 extends StaticBody3D
 
-var _ready_done:bool = false
+var hand_ready_done:bool = false
 var dominos_in_hand:Array[DominoBlock] = []
 var dominos_reset:Array[bool] = []
 var domino_drawn: DominoBlock = null
@@ -36,7 +37,7 @@ func start_setting_domino(db: DominoBlock):
 	lifted = false
 	ready_to_set = false
 	domino_drawn = db
-	_ready_done = true
+	hand_ready_done = true
 	
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -46,7 +47,7 @@ func _ready() -> void:
 	get_tree().create_timer(0.05).timeout.connect(fix_ordering)
 func fix_ordering():
 	# This function fixes a visual bug in Mobile render
-	if _ready_done:
+	if hand_ready_done:
 		return
 	var i = 0
 	for child in dominos_in_hand:
@@ -54,10 +55,10 @@ func fix_ordering():
 			return get_tree().create_timer(0.05).timeout.connect(fix_ordering)
 		child.surface_material.render_priority = i
 		i += 1
-	_ready_done = true
+	hand_ready_done = true
 	
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if GameManager.click_streak >= 5 and not has_wild_card:
 		has_wild_card = true
 		var wild_card_db: DominoBlock = domino_prefab_scene.instantiate()
@@ -72,6 +73,8 @@ func _process(delta: float) -> void:
 		dominos_in_hand.append(wild_card_db)
 		wild_card_db.is_wildcard = true
 		wild_card_db.init_pending = false
+
+func _physics_process(delta: float) -> void:
 	if not domino_drawn == null:
 		if domino_drawn.global_transform.origin.y < float_point.global_transform.origin.y:
 			domino_drawn.global_transform.origin.y = clampf(
@@ -95,6 +98,8 @@ func _process(delta: float) -> void:
 			if domino_drawn.name == "WildCardDominoBlock":
 				has_wild_card = false
 			GameManager.get_capture_point().collect_new_domino(domino_drawn, true)
+			if GameManager.hand_dominos.has(domino_drawn):
+				GameManager.hand_dominos.erase(domino_drawn)
 			domino_drawn = null
 
 var last_touch_time: int = 0

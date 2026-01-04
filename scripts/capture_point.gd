@@ -37,13 +37,16 @@ func _exit_tree() -> void:
 		GameManager.active_capture_point = null
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if is_instance_valid(active_block):
 		setup_active_block()
 	else:
 		active_block = find_child("*", true, false) as DominoBlock
+
+func _physics_process(delta: float) -> void:
 	if not moving_block == null:
 		move_block_toward_capture(delta)
+	
 
 func setup_active_block():
 	active_block.freeze = true
@@ -132,8 +135,6 @@ func move_block_toward_capture(delta: float):
 
 func setup_active_block_from_movement():
 	var replaced_wildcard = active_block.is_wildcard
-	if moving_block.is_wildcard:
-		print("Merging a wildcard!")
 	active_block.replace(moving_block)
 	
 	rotation_tween = null

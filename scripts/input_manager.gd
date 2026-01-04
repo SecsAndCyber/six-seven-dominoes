@@ -1,3 +1,4 @@
+class_name InputManagerClass
 extends Node
 
 # Called when the node enters the scene tree for the first time.
@@ -40,9 +41,11 @@ func _perform_raycast(screen_pos: Vector2) -> void:
 
 	# 4. Handle the hit
 	if result:
-		var hit_object = result.collider
-		
-		# Check if the hit object is one of your dominos
-		if hit_object is PhysicsBody3D and hit_object.has_method("touched"):
-			hit_object.touched()
-			# print("Pushed: ", hit_object.name)
+		var collider = result.collider
+		if collider.has_method("touched"):
+			collider.touched()
+		elif collider.get_parent().has_method("touched"):
+			printerr("Touched a collider in child node:",
+				collider.get_parent(),
+				collider)
+			collider.get_parent().touched()

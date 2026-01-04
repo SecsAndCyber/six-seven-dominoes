@@ -23,6 +23,7 @@ func _ready() -> void:
 	for db in find_children("*", "DominoBlock", true, true):
 		db.freeze = true
 		db.set_collision_layer_value(1, false)
+		prints("Adding", db, "to GameManager")
 		GameManager.board_dominos.append(db)
 	change_menu(splash)
 

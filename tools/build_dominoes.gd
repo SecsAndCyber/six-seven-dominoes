@@ -48,7 +48,7 @@ func _run():
 			var res = ResourceLoader.load(fbx_path)
 			var meshes = []
 			
-			print("Opening %s as %s" % [fbx_path, res])
+			# print("Opening %s as %s" % [fbx_path, res])
 			if res is PackedScene:
 				var inst = res.instantiate()
 				meshes = _find_mesh_in_node(inst)

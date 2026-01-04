@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://dk2qcxsr5sajx"]
+
+[ext_resource type="Script" uid="uid://b4i447vo1gip8" path="res://scripts/button_3d.gd" id="1_8i6ph"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_qorkh"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_8i6ph"]
+
+[node name="Button3D" type="StaticBody3D"]
+script = ExtResource("1_8i6ph")
+metadata/_custom_type_script = "uid://b4i447vo1gip8"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_qorkh")
+debug_color = Color(0.81590277, 0.44436628, 0.20790601, 1)
+
+[node name="DebugMesh" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_8i6ph")

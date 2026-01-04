@@ -40,9 +40,6 @@ func setup_surface_material(wild:bool):
 		surface_material.roughness = 1.0
 		surface_material.metallic_specular = 0.0
 		surface_material.emission_enabled = false
-		
-		
-	
 
 # init_pending is set by the stage once the tree location has stabilized
 # Designer note: Set this as false if the parent isn't DominoLevel

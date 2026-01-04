@@ -10,20 +10,22 @@ func _process(_delta):
 	pass
 
 func _input(event):
-	if (event is InputEventMouseButton
-		or event is InputEventScreenTouch) and event.is_pressed():
-		_perform_raycast(event.position)
+	print(event)
+	if (event is InputEventMouseButton) and event.is_pressed():
+		_perform_raycast(event.position, event.is_pressed())
 
 func get_active_camera() -> Camera3D:
 	# This gets the camera currently rendering to the main window
 	return get_viewport().get_camera_3d()
 
-func _perform_raycast(screen_pos: Vector2) -> void:
+func _perform_raycast(screen_pos: Vector2, pressed: bool) -> void:
 	if GameManager.level_complete == 0xDEADBEEF: return
 	if get_viewport() == null: return
 	if get_active_camera() == null: return
 	if not GameManager.active_game_level == null:
 		if GameManager.active_game_level.pre_loss:
+			return
+		if GameManager.active_game_level.pre_win:
 			return
 	# 1. Calculate the start and end points of the ray
 	var ray_origin = get_active_camera().project_ray_origin(screen_pos)
@@ -42,10 +44,20 @@ func _perform_raycast(screen_pos: Vector2) -> void:
 	# 4. Handle the hit
 	if result:
 		var collider = result.collider
-		if collider.has_method("touched"):
-			collider.touched()
-		elif collider.get_parent().has_method("touched"):
-			printerr("Touched a collider in child node:",
-				collider.get_parent(),
-				collider)
-			collider.get_parent().touched()
+		if pressed:
+			if collider.has_method("touched"):
+				collider.touched()
+			elif collider.get_parent().has_method("touched"):
+				printerr("Touched a collider in child node:",
+					collider.get_parent(),
+					collider)
+				collider.get_parent().touched()
+		elif not pressed:
+			if collider.has_method("released"):
+				collider.released()
+			elif collider.get_parent().has_method("released"):
+				printerr("Touched a collider in child node:",
+					collider.get_parent(),
+					collider)
+				collider.get_parent().released()
+			

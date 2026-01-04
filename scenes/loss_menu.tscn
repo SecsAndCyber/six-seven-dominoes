@@ -1,8 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://cx4dimulbckoi"]
+[gd_scene load_steps=9 format=3 uid="uid://cx4dimulbckoi"]
 
 [ext_resource type="Script" uid="uid://bcjdcyl1xyqtl" path="res://scripts/loss_menu.gd" id="1_u6it3"]
 [ext_resource type="PackedScene" uid="uid://dro31wxbi680v" path="res://scenes/game_camera.tscn" id="2_5rqbm"]
 [ext_resource type="PackedScene" uid="uid://dartuwkh4q1a7" path="res://scenes/domino_block.tscn" id="3_eo3ww"]
+[ext_resource type="PackedScene" uid="uid://dk2qcxsr5sajx" path="res://scenes/button_box_3d.tscn" id="4_5rqbm"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_l6cm7"]
 
@@ -43,6 +44,9 @@ init_pending = false
 value_t = 7
 value_b = 6
 
+[node name="ResumeButton3D" parent="Camera3D/Splash/Label3D" instance=ExtResource("4_5rqbm")]
+transform = Transform3D(17.569164, 0, 0, 0, 7.777301, 7.4505806e-08, 0, -5.8488183e-07, 0.8829697, -0.2888832, 0.022380933, -6.348438)
+
 [node name="Label_Loss_Stat" type="Label3D" parent="Camera3D/Splash"]
 transform = Transform3D(1, 0, 0, 0, 0.9999999, 0, 0, 0, 0.9999999, 0.2528658, -0.469234, -1.6782317)
 text = "0 tiles left on the table"
@@ -58,3 +62,5 @@ shape = SubResource("BoxShape3D_ekxnf")
 [node name="TableTop2" type="MeshInstance3D" parent="Backdrop"]
 mesh = SubResource("PlaneMesh_bqqt6")
 skeleton = NodePath("../..")
+
+[connection signal="button_pressed" from="Camera3D/Splash/Label3D/ResumeButton3D" to="." method="_on_resume_button_3d_button_pressed"]

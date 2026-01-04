@@ -11,6 +11,7 @@ extends Node3D
 @onready var coins_label: Label3D = $Camera3D/CoinsLabel
 # Called when the node enters the scene tree for the first time.
 var pre_loss:bool = false
+var pre_win:bool = false
 var max_pair_domino: DominoBlock = null
 var ready_done:bool = false
 
@@ -18,7 +19,7 @@ func update_ui(_delta:float = 0.0):
 	if OS.is_debug_build():
 		debug_label.text = "{LevelName} FPS:{FPS}".format({
 			'LevelName':get_node("/root/").get_children()[3].name,
-			'FPS':int(1.0 / _delta) if _delta else '??'
+			'FPS':str(int(1.0 / _delta)) if _delta else '??'
 		})
 	elif debug_label.text.length() > 0:
 		debug_label.text = ""
@@ -27,6 +28,7 @@ func update_ui(_delta:float = 0.0):
 
 func _ready() -> void:
 	pre_loss = false
+	pre_win = false
 	update_ui(0)
 	for child in get_children():
 		if child is DominoBlock:
@@ -107,6 +109,8 @@ func _process(_delta: float) -> void:
 	if GameManager.level_complete and GameManager.level_complete < Time.get_ticks_msec():
 		GameManager.last_played = next_level
 		GameManager.advance_to_level(next_level)
+	if pre_win:
+		return
 	if GameManager.hand_dominos.size() == 0 and GameManager.board_dominos.size() > 0:
 		var lost = (not hand.has_wild_card and
 						not GameManager.get_capture_point().active_block.is_wildcard
@@ -120,7 +124,7 @@ func _process(_delta: float) -> void:
 		if not null == GameManager.get_capture_point().moving_block:
 			if lost:
 				lost = false
-		if lost and not pre_loss:
+		if lost and not pre_loss and not pre_win:
 			pre_loss = true
 			get_tree().create_timer(LEVEL_RESET_DELAY_SEC).timeout.connect(
 				func():
@@ -128,12 +132,13 @@ func _process(_delta: float) -> void:
 			)
 
 func is_level_won() -> bool:
-	if pre_loss:
+	if pre_loss or pre_win:
 		return false
 	if GameManager.level_complete != 0:
 		return true
 	if GameManager.board_dominos.size() == 0:
 		if GameManager.hand_dominos.size() > 0:
+			pre_win = true
 			var bonus = GameManager.hand_dominos.size()
 			GameManager.coins += bonus
 			print("Bonus coins for remaining hand: ", bonus)

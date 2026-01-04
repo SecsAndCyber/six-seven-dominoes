@@ -1,8 +1,9 @@
-[gd_scene load_steps=8 format=3 uid="uid://0jk7qqutmbqj"]
+[gd_scene load_steps=9 format=3 uid="uid://0jk7qqutmbqj"]
 
 [ext_resource type="Script" uid="uid://dde3871yfxfah" path="res://scripts/main_menu.gd" id="1_ekxnf"]
 [ext_resource type="PackedScene" uid="uid://dro31wxbi680v" path="res://scenes/game_camera.tscn" id="1_l6cm7"]
 [ext_resource type="PackedScene" uid="uid://dartuwkh4q1a7" path="res://scenes/domino_block.tscn" id="3_bqqt6"]
+[ext_resource type="PackedScene" uid="uid://dk2qcxsr5sajx" path="res://scenes/button_box_3d.tscn" id="4_wu84c"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_l6cm7"]
 
@@ -29,6 +30,7 @@ transform = Transform3D(1, 0, 0, 0, 0.26927286, 0.96306396, 0, -0.96306396, 0.26
 transform = Transform3D(1, 0, 0, 0, 0.99999946, 0, 0, 0, 0.99999946, 0.36724663, 0.34922302, -1.5288992)
 text = "Dominos"
 font_size = 117
+outline_size = 18
 
 [node name="DominoBlock4" parent="Camera3D/Splash/Label3D" instance=ExtResource("3_bqqt6")]
 transform = Transform3D(0.7023093, 0.104635574, 0.7041398, 0.09019745, -0.99424624, 0.05778268, 0.70613503, 0.022930488, -0.7077062, -5.531708, 1.0651398, -5.048218)
@@ -38,6 +40,9 @@ init_pending = false
 value_t = 7
 value_b = 6
 rotation_speed = 0.5
+
+[node name="SplashButton3D" parent="Camera3D/Splash" instance=ExtResource("4_wu84c")]
+transform = Transform3D(15.181, -9.481874e-07, 0, -1.3271651e-06, -10.846, 2.8537768e-08, 3.787433e-14, 3.0952063e-07, 1, 0.120025635, 1.1018407, -5.9749074)
 
 [node name="MenuA" type="Node3D" parent="Camera3D"]
 
@@ -52,8 +57,13 @@ rotation_speed = 0.5
 
 [node name="Label3D" type="Label3D" parent="Camera3D/MenuA/DominoBlock"]
 transform = Transform3D(-0.0101638585, 0.2872744, 0.957794, -0.9996451, 0.020667449, -0.016806832, -0.02462338, -0.95762503, 0.28696233, 0.226076, -7.92217, 0.3882466)
+billboard = 1
 text = "Start Game"
 font_size = 312
+outline_size = 64
+
+[node name="StartButton3D" parent="Camera3D/MenuA/DominoBlock" instance=ExtResource("4_wu84c")]
+transform = Transform3D(1.0000005, 0, 0, 0, 15.079583, 0, 0, 0, 2.4168463, -0.7341207, -5.27122, 0)
 
 [node name="DominoBlock2" parent="Camera3D/MenuA" instance=ExtResource("3_bqqt6")]
 transform = Transform3D(-4.3711385e-08, -0.9999999, 0, 0.2692728, -1.1770289e-08, -0.9630638, 0.9630638, -4.2096854e-08, 0.2692728, -8.54847, 2.8638291, -8.450321)
@@ -66,8 +76,13 @@ rotation_speed = 0.5
 
 [node name="Label3D" type="Label3D" parent="Camera3D/MenuA/DominoBlock2"]
 transform = Transform3D(-0.0101638585, 0.2872744, 0.957794, -0.9996451, 0.020667449, -0.016806832, -0.02462338, -0.95762503, 0.28696233, 0.28908834, -7.4962, 0.20287864)
+billboard = 1
 text = "Continue"
 font_size = 312
+outline_size = 64
+
+[node name="ContinueButton3D" parent="Camera3D/MenuA/DominoBlock2" instance=ExtResource("4_wu84c")]
+transform = Transform3D(1.0000005, 0, 0, 0, 15.079583, 0, 0, 0, 2.4168463, -0.7341207, -5.27122, 0)
 
 [node name="DominoBlock3" parent="Camera3D/MenuA" instance=ExtResource("3_bqqt6")]
 transform = Transform3D(-4.3711385e-08, -0.9999999, 0, 0.2692728, -1.1770289e-08, -0.9630638, 0.9630638, -4.2096854e-08, 0.2692728, -8.19347, 0.4032011, -7.762329)
@@ -80,10 +95,16 @@ rotation_speed = 0.5
 
 [node name="Label3D" type="Label3D" parent="Camera3D/MenuA/DominoBlock3"]
 transform = Transform3D(-0.0101638585, 0.2872744, 0.957794, -0.9996451, 0.020667449, -0.016806832, -0.02462338, -0.95762503, 0.28696233, 0.37776697, -6.7580833, -0.04987392)
+billboard = 1
 text = "About"
 font_size = 312
+outline_size = 64
+
+[node name="AboutButton3D" parent="Camera3D/MenuA/DominoBlock3" instance=ExtResource("4_wu84c")]
+transform = Transform3D(1.0000005, 0, 0, 0, 15.079583, 0, 0, 0, 2.4168463, -0.7341207, -5.27122, 0)
 
 [node name="MenuAbout" type="Node3D" parent="Camera3D"]
+visible = false
 
 [node name="DominoBlock" parent="Camera3D/MenuAbout" instance=ExtResource("3_bqqt6")]
 transform = Transform3D(-4.3711385e-08, -0.9999999, 0, 0.2692728, -1.1770289e-08, -0.9630638, 0.9630638, -4.2096854e-08, 0.2692728, -9.243469, 5.4352093, -9.16928)
@@ -95,9 +116,11 @@ value_b = 1
 rotation_speed = 0.5
 
 [node name="Label3D" type="Label3D" parent="Camera3D/MenuAbout/DominoBlock"]
-transform = Transform3D(-0.0101638585, 0.2872744, 0.957794, -0.9996451, 0.020667449, -0.016806832, -0.02462338, -0.95762503, 0.28696233, 0.226076, -7.92217, 0.3882466)
-text = "Start Game"
+transform = Transform3D(-0.0101638585, 0.2872744, 0.957794, -0.9996451, 0.020667449, -0.016806832, -0.02462338, -0.95762503, 0.28696233, 0.2260758, -11.722557, 0.38824677)
+billboard = 1
+text = "Created By Slair Coding"
 font_size = 312
+outline_size = 64
 
 [node name="DominoBlock2" parent="Camera3D/MenuAbout" instance=ExtResource("3_bqqt6")]
 transform = Transform3D(-4.3711385e-08, -0.9999999, 0, 0.2692728, -1.1770289e-08, -0.9630638, 0.9630638, -4.2096854e-08, 0.2692728, -8.54847, 2.8638291, -8.450321)
@@ -109,9 +132,11 @@ value_b = 2
 rotation_speed = 0.5
 
 [node name="Label3D" type="Label3D" parent="Camera3D/MenuAbout/DominoBlock2"]
-transform = Transform3D(-0.0101638585, 0.2872744, 0.957794, -0.9996451, 0.020667449, -0.016806832, -0.02462338, -0.95762503, 0.28696233, 0.28908834, -7.4962, 0.20287864)
-text = "Continue"
+transform = Transform3D(-0.0101638585, 0.2872744, 0.957794, -0.9996451, 0.020667449, -0.016806832, -0.02462338, -0.95762503, 0.28696233, 0.28908813, -10.720741, 0.20287862)
+billboard = 1
+text = "Built with Godot 4.5"
 font_size = 312
+outline_size = 64
 
 [node name="DominoBlock3" parent="Camera3D/MenuAbout" instance=ExtResource("3_bqqt6")]
 transform = Transform3D(-4.3711385e-08, -0.9999999, 0, 0.2692728, -1.1770289e-08, -0.9630638, 0.9630638, -4.2096854e-08, 0.2692728, -8.19347, 0.4032011, -7.762329)
@@ -123,9 +148,14 @@ value_b = 3
 rotation_speed = 0.5
 
 [node name="Label3D" type="Label3D" parent="Camera3D/MenuAbout/DominoBlock3"]
-transform = Transform3D(-0.0101638585, 0.2872744, 0.957794, -0.9996451, 0.020667449, -0.016806832, -0.02462338, -0.95762503, 0.28696233, 0.37776697, -6.7580833, -0.04987392)
-text = "About"
+transform = Transform3D(-0.0101638585, 0.2872744, 0.957794, -0.9996451, 0.020667449, -0.016806832, -0.02462338, -0.95762503, 0.28696233, 0.37776694, -7.2028503, -0.04987383)
+billboard = 1
+text = "Contact us"
 font_size = 312
+outline_size = 64
+
+[node name="ContactButton3D" parent="Camera3D/MenuAbout/DominoBlock3" instance=ExtResource("4_wu84c")]
+transform = Transform3D(1, 0, 0, 0, 17.40539, 0, 0, 0, 1.9210322, -0.690426, -7.759466, -0.07864833)
 
 [node name="Backdrop" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.036530018, 0.082410336, -0.19729328)
@@ -138,3 +168,9 @@ shape = SubResource("BoxShape3D_ekxnf")
 [node name="TableTop2" type="MeshInstance3D" parent="Backdrop"]
 mesh = SubResource("PlaneMesh_bqqt6")
 skeleton = NodePath("../..")
+
+[connection signal="button_pressed" from="Camera3D/Splash/SplashButton3D" to="." method="_on_splash_button_3d_button_pressed"]
+[connection signal="button_pressed" from="Camera3D/MenuA/DominoBlock/StartButton3D" to="." method="_on_menua_start_button_pressed"]
+[connection signal="button_pressed" from="Camera3D/MenuA/DominoBlock2/ContinueButton3D" to="." method="_on_menua_continue_button_pressed"]
+[connection signal="button_pressed" from="Camera3D/MenuA/DominoBlock3/AboutButton3D" to="." method="_on_menua_about_button_pressed"]
+[connection signal="button_pressed" from="Camera3D/MenuAbout/DominoBlock3/ContactButton3D" to="." method="_on_contact_button_pressed"]

@@ -28,7 +28,6 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	update_ui(_delta)
 
-func _input(event):
-	if event is InputEventMouseButton or event is InputEventScreenTouch:
-		if event.is_pressed():
-			GameManager.advance_to_level("res://scenes/level_4_0_startingLevel.tscn")
+
+func _on_resume_button_3d_button_pressed() -> void:
+	GameManager.advance_to_level(GameManager.STARTING_LEVEL)

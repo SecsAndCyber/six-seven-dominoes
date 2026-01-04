@@ -13,7 +13,7 @@ func _init():
 	loadScore()
 	
 var _save_path = "user://67dominos.state"
-static func save_state():
+func save_state():
 	var file = FileAccess.open(instance._save_path, FileAccess.WRITE)
 	if file:
 		file.store_line(JSON.stringify({
@@ -24,7 +24,7 @@ static func save_state():
 	else:
 		printerr("Unable to save", instance._save_path)
 
-static func loadScore():
+func loadScore():
 	var file = FileAccess.open(instance._save_path, FileAccess.READ)
 	if file:
 		var json_string = file.get_line()
@@ -87,7 +87,7 @@ func prepare_level(dl:DominosLevel) -> void:
 	board_dominos = []
 	hand_dominos = []
 
-func advance_to_level(level_path:String, allow_main_menu:bool=false) -> void:
+func advance_to_level(level_path:String, prevent_redirection:bool=false) -> void:
 	is_transitioning = true
 	var to_remove = board_dominos + hand_dominos
 	if level_complete == 0xDEADBEEF:
@@ -114,13 +114,16 @@ func advance_to_level(level_path:String, allow_main_menu:bool=false) -> void:
 	level_complete = 0
 	board_dominos = []
 	hand_dominos = []
-	if "/levels/" in level_path:
-		last_played = level_path
-	if last_played and level_path == STARTING_LEVEL:
-		level_path = last_played
-	if not allow_main_menu:
+	if prevent_redirection:
+		pass
+	else:
+		if "/levels/" in level_path:
+			last_played = level_path
+		if last_played and level_path == STARTING_LEVEL:
+			level_path = last_played
 		if not "/levels/" in last_played:
 			level_path = STARTING_LEVEL
+		
 	save_state()
 	if not OK == get_tree().change_scene_to_file(level_path):
 		get_tree().change_scene_to_file(STARTING_LEVEL)

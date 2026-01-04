@@ -69,8 +69,6 @@ func _run():
 					# set owner so the node is included when packing/saving
 					if scene_inst.has_method("set_owner"):
 						mi.owner = scene_inst
-				# scene_inst.rotate_object_local(Vector3.RIGHT, PI / 2)
-				# scene_inst.scale = Vector3.ONE * 100
 
 				var out_path := out_dir + "/" + file_name.get_basename() + ".tscn"
 				var packed := PackedScene.new()

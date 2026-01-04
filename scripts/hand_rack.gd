@@ -7,8 +7,10 @@ var dominos_reset:Array[bool] = []
 var domino_drawn: DominoBlock = null
 @export var collection_speed : float = 0.10
 @onready var float_point: Node3D = $FloatPoint
+@onready var coin_capture: Node3D = $CoinCapture
 @onready var wild_card_location: Node3D = $WildCardLocation
 var domino_prefab_scene = preload("res://scenes/domino_block.tscn")
+var coin_prefab_scene = preload("res://scenes/Coin.tscn")
 
 var rotation_tween = null
 var lifted: bool = false
@@ -56,23 +58,45 @@ func fix_ordering():
 		child.surface_material.render_priority = i
 		i += 1
 	hand_ready_done = true
+
+var floating_wild_card: DominoBlock
+func create_wild_card(parent:Node3D, location:Node3D):
+	var wild_card_db:DominoBlock
+	if parent == self:
+		has_wild_card = true
+	if not null == floating_wild_card:
+		floating_wild_card.get_parent().remove_child(floating_wild_card)
+		wild_card_db = floating_wild_card
+		wild_card_db.transform.origin = Vector3.ZERO
+		wild_card_db.scale = Vector3.ONE
+		wild_card_db.rotation_degrees = Vector3.ZERO
+		floating_wild_card = null
+	else:
+		wild_card_db = domino_prefab_scene.instantiate()
+		wild_card_db.transform.origin = Vector3.ZERO
+		wild_card_db.scale = Vector3.ONE
+		wild_card_db.rotation_degrees = Vector3.ZERO
+	wild_card_db.is_wildcard = true
+	wild_card_db.name = "WildCardDominoBlock"
+	if parent == self:
+		if dominos_in_hand.size() > 4:
+			wild_card_db.freeze = true
+		wild_card_db.set_collision_layer_value(2, true)
+		dominos_in_hand.append(wild_card_db)
+	wild_card_db.set_collision_layer_value(1, false)
+	parent.add_child(wild_card_db)
+	wild_card_db.global_transform = location.global_transform
+	wild_card_db.is_wildcard = true
+	wild_card_db.init_pending = false
+	if not parent == self:
+		floating_wild_card = wild_card_db
+	return wild_card_db
 	
 
 func _process(_delta: float) -> void:
 	if GameManager.click_streak >= 5 and not has_wild_card:
-		has_wild_card = true
-		var wild_card_db: DominoBlock = domino_prefab_scene.instantiate()
-		wild_card_db.is_wildcard = true
-		wild_card_db.name = "WildCardDominoBlock"
-		if dominos_in_hand.size() > 4:
-			wild_card_db.freeze = true
-		wild_card_db.set_collision_layer_value(1, false)
-		wild_card_db.set_collision_layer_value(2, true)
-		add_child(wild_card_db)
-		wild_card_db.global_transform = wild_card_location.global_transform
-		dominos_in_hand.append(wild_card_db)
-		wild_card_db.is_wildcard = true
-		wild_card_db.init_pending = false
+		if not GameManager.get_capture_point().has_wild:
+			create_wild_card(self, wild_card_location)
 
 func _physics_process(delta: float) -> void:
 	if not domino_drawn == null:
@@ -111,7 +135,7 @@ func touched():
 		return # Exit early if called too soon
 	if not domino_drawn == null:
 		return # Already moving a domino from hand
-	if GameManager.get_capture_point().active_block.is_wildcard:
+	if GameManager.get_capture_point().has_wild:
 		return # Don't override a pending wildcard
 	# Update the timestamp for the next valid touch
 	last_touch_time = current_time

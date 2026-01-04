@@ -29,3 +29,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 5, 0)
 
 [node name="WildCardLocation" type="Node3D" parent="."]
 transform = Transform3D(0.48702988, 0.8436542, 0.22594135, -0.78062075, 0.5365058, -0.32061297, -0.39170533, -0.020226419, 0.91986835, 2.366, 2.278, 3.704)
+
+[node name="CoinCapture" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.1939335, 1.6204634, 12.942565)

@@ -5,8 +5,9 @@
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_u00v3"]
 albedo_color = Color(0.833237, 0.786724, 0.321701, 1)
-metallic = 1.0
-roughness = 0.33
+metallic = 0.75
+metallic_specular = 0.8
+roughness = 0.45
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_wvfuf"]
 material = SubResource("StandardMaterial3D_u00v3")
@@ -30,5 +31,6 @@ shape = SubResource("SphereShape3D_gvihp")
 
 [node name="AudioStreamPlayer3D" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("1_owubc")
+volume_db = -20.0
 
 [connection signal="finished" from="AudioStreamPlayer3D" to="." method="_on_audio_stream_player_3d_finished"]

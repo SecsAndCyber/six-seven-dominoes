@@ -20,6 +20,16 @@ var collectable: bool :
 		if not moving_block == null:
 			return false
 		return true
+
+var has_wild: bool:
+	get():
+		if not null == active_block:
+			if active_block.is_wildcard:
+				return true
+		if not null == moving_block:
+			if moving_block.is_wildcard:
+				return true
+		return false
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	pass

@@ -1,10 +1,11 @@
-[gd_scene load_steps=10 format=3 uid="uid://bpwmck6ndoo6o"]
+[gd_scene load_steps=11 format=3 uid="uid://bpwmck6ndoo6o"]
 
 [ext_resource type="Script" uid="uid://b51uhpmrsglm" path="res://scripts/dominoes_level.gd" id="1_ahtht"]
 [ext_resource type="PackedScene" uid="uid://dhamkvtbdtbed" path="res://scenes/capture_point.tscn" id="2_gdtbw"]
 [ext_resource type="PackedScene" uid="uid://dro31wxbi680v" path="res://scenes/game_camera.tscn" id="3_lhfmt"]
 [ext_resource type="PackedScene" uid="uid://dartuwkh4q1a7" path="res://scenes/domino_block.tscn" id="4_gjmw3"]
 [ext_resource type="PackedScene" uid="uid://kb6wm8lyrkvh" path="res://scenes/hand_rack.tscn" id="5_0aixa"]
+[ext_resource type="PackedScene" uid="uid://dk2qcxsr5sajx" path="res://scenes/button_box_3d.tscn" id="6_gdtbw"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_5ildb"]
 
@@ -72,5 +73,24 @@ transform = Transform3D(0.48666862, 0.84388196, 0.22586969, -0.78066015, 0.53615
 collision_layer = 2
 collision_mask = 7
 
+[node name="BuyWildcard" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.38983, 0.70099545, 5.1690845)
+
+[node name="Button3D" parent="BuyWildcard" instance=ExtResource("6_gdtbw")]
+transform = Transform3D(1.484129, 0, 0, 0, 0.19, 0, 0, 0, 1.3122839, 0.63788605, -0.48458815, 0)
+
+[node name="MeshContainer" type="Node3D" parent="BuyWildcard"]
+transform = Transform3D(0.10279058, 0.347393, 0.30720872, -0.45045373, -1.9689958e-08, 0.1507197, 0.110229425, -0.32394922, 0.329441, 0, 0, 0)
+
+[node name="Label3D" type="Label3D" parent="BuyWildcard"]
+transform = Transform3D(0.9184671, 0, 0.3954974, 0, 1, 0, -0.3954974, 0, 0.9184671, -5.130869, 4.3420105, -0.35794067)
+billboard = 1
+render_priority = 127
+outline_render_priority = 126
+text = "-50 Coins"
+font_size = 22
+outline_size = 9
+
 [connection signal="child_exiting_tree" from="TableTop" to="." method="_on_table_top_child_exiting_tree"]
 [connection signal="child_exiting_tree" from="Hand" to="." method="_on_hand_child_exiting_tree"]
+[connection signal="button_pressed" from="BuyWildcard/Button3D" to="." method="_on_buy_wild_button_pressed"]

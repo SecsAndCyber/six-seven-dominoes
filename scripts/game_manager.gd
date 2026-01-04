@@ -62,11 +62,32 @@ func get_capture_point() -> CapturePoint:
 var board_dominos: Array[DominoBlock] = []
 var hand_dominos: Array[DominoBlock] = []
 
-func clear_hand():
+@export var pause:bool = true
+func clear_hand(score:bool):
+	var coin_graphics = []
 	while hand_dominos.size():
 		var db = hand_dominos.pop_back()
-		db.get_parent().remove_child(db)
+		if score:
+			var coin:Coin = active_game_level.hand.coin_prefab_scene.instantiate()
+			coin_graphics.append(coin)
+			coin.set_collision_layer_value(1, false)
+			coin.set_collision_layer_value(2, false)
+			coin.spin_velocity = 0
+			coin.scale = Vector3(1,1,1)
+			coin.rotation = Vector3(0,0,90)
+			db.get_parent().add_child(coin)
+			coin.global_transform.origin = db.global_transform.origin
+			db.get_parent().remove_child(db)
+			await get_tree().create_timer(0.2).timeout
+			coin.animate_to_position_free(
+				active_game_level.hand.float_point.global_transform.origin,
+				active_game_level.hand.coin_capture.global_transform.origin,
+				1.0
+			).connect(func(): GameManager.coins += 1)
 		remove_domino(db)
+	if score:
+		await get_tree().create_timer(2).timeout
+	
 
 func remove_domino(db: DominoBlock):
 	if board_dominos.has(db):

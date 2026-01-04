@@ -9,6 +9,8 @@ extends Node3D
 @onready var streak_label: Label3D = $Camera3D/StreakLabel
 @onready var debug_label: Label3D = $Camera3D/DebugLabel
 @onready var coins_label: Label3D = $Camera3D/CoinsLabel
+@onready var buy_wildcard: Node3D = $BuyWildcard
+
 # Called when the node enters the scene tree for the first time.
 var pre_loss:bool = false
 var pre_win:bool = false
@@ -25,6 +27,31 @@ func update_ui(_delta:float = 0.0):
 		debug_label.text = ""
 	streak_label.text = "%s Streak" % ["•".repeat(GameManager.click_streak)]
 	coins_label.text = "%s Coins" % [GameManager.coins]
+	setup_buy_button()
+
+func setup_buy_button():
+	if GameManager.coins >= 50:
+		if not hand.has_wild_card and not capture_point.has_wild:
+			buy_wildcard.visible = true
+			if DominoStack.wildcard_domino and buy_wildcard.get_node("MeshContainer").get_child_count() == 0:
+				buy_wildcard.get_node("MeshContainer").transform.origin = Vector3.ZERO
+				buy_wildcard.get_node("MeshContainer").rotation_degrees = Vector3(-18.5,43, -90)
+				buy_wildcard.get_node("MeshContainer").scale = Vector3(.475,.475,.475)
+				var db:DominoBlock = hand.create_wild_card(buy_wildcard.get_node("MeshContainer"),buy_wildcard)
+				db.freeze = true
+				db.scale = 2.105 * Vector3.ONE
+				db.transform.origin = Vector3.ZERO
+			else:
+				if not buy_wildcard.get_node("MeshContainer").scale == Vector3(.25,.25,.25):
+					buy_wildcard.get_node("MeshContainer").transform.origin = Vector3(0,-.32,0)
+					buy_wildcard.get_node("MeshContainer").rotation_degrees = Vector3(-34,-128.5, 7.0)
+					buy_wildcard.get_node("MeshContainer").scale = Vector3(.25,.25,.25)
+		else:
+			if buy_wildcard.visible:
+				buy_wildcard.visible = false
+	else:
+		if buy_wildcard.visible:
+			buy_wildcard.visible = false
 
 func _ready() -> void:
 	pre_loss = false
@@ -91,8 +118,8 @@ func shuffle_live_dominoes(live_dominos):
 		b_index += 1
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-const LEVEL_RESET_DELAY_MSEC: int = 250 # .25 second in milliseconds
-const LEVEL_RESET_DELAY_SEC: float = LEVEL_RESET_DELAY_MSEC / 100.0
+const LEVEL_RESET_DELAY_MSEC: int = 10 # very short
+const LEVEL_RESET_DELAY_SEC: float = .25
 func _process(_delta: float) -> void:
 	if not ready_done or GameManager.is_transitioning:
 		return
@@ -113,7 +140,7 @@ func _process(_delta: float) -> void:
 		return
 	if GameManager.hand_dominos.size() == 0 and GameManager.board_dominos.size() > 0:
 		var lost = (not hand.has_wild_card and
-						not GameManager.get_capture_point().active_block.is_wildcard
+						not GameManager.get_capture_point().has_wild
 					)
 		for bd in GameManager.board_dominos:
 			if GameManager.active_capture_point and bd.face == "up":
@@ -139,12 +166,10 @@ func is_level_won() -> bool:
 	if GameManager.board_dominos.size() == 0:
 		if GameManager.hand_dominos.size() > 0:
 			pre_win = true
-			var bonus = GameManager.hand_dominos.size()
-			GameManager.coins += bonus
-			print("Bonus coins for remaining hand: ", bonus)
 			# Clear the hand so we don't double-count if _process runs again
-			GameManager.clear_hand()
+			await GameManager.clear_hand(true)
 		GameManager.level_complete = Time.get_ticks_msec() + LEVEL_RESET_DELAY_MSEC
+		
 		return true
 	return false
 
@@ -161,3 +186,10 @@ func _on_hand_child_exiting_tree(node: Node) -> void:
 # script that triggers whenever a match is made, or a Haptic Vibration
 # call for when the player tries to make an invalid move?
 #
+
+
+func _on_buy_wild_button_pressed() -> void:
+	if not hand.has_wild_card and not capture_point.has_wild:
+		if GameManager.coins >= 50:
+			hand.create_wild_card(hand, hand.wild_card_location)
+			GameManager.coins -= 50

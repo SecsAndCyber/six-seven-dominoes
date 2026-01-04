@@ -14,28 +14,35 @@ var is_wildcard:
 			return
 		# Run this even if the flag isn't changing due to the possiblity
 		# of the originial set happening before all the objects were ready
-		if val:
-			wild_glitter_light.light_energy = randf_range(0.8, 1.2)
-			noise.seed = randi()
-			wild_glitter_light.visible = true
-			surface_material.roughness_texture = noise_tex
-			surface_material.albedo_color = WILDGOLD_COLOR
-			surface_material.metallic = .35
-			surface_material.roughness = 1.0
-			surface_material.metallic_specular = 1.0
-			surface_material.emission = WILDGOLD_COLOR
-			surface_material.emission_operator = surface_material.EMISSION_OP_ADD
-			surface_material.emission_enabled = true
-			surface_material.emission_energy_multiplier = .12
-		else:
-			wild_glitter_light.visible = false
-			surface_material.albedo_color = STANDARD_COLOR
-			surface_material.metallic = 0
-			surface_material.roughness = 1.0
-			surface_material.emission_enabled = false
+		setup_surface_material(val)
+
 		if not _is_wildcard == val:
 			look_update_needed = true
 			_is_wildcard = val
+
+func setup_surface_material(wild:bool):
+	if wild:
+		wild_glitter_light.visible = true
+		surface_material.roughness_texture = noise_tex
+		surface_material.albedo_color = WILDGOLD_COLOR
+		surface_material.metallic = .35
+		surface_material.roughness = 1.0
+		surface_material.metallic_specular = 1.0
+		surface_material.emission_enabled = true
+		surface_material.emission = WILDGOLD_COLOR
+		surface_material.emission_operator = surface_material.EMISSION_OP_ADD
+		surface_material.emission_energy_multiplier = .12
+	else:
+		wild_glitter_light.visible = false
+		surface_material.roughness_texture = null
+		surface_material.albedo_color = STANDARD_COLOR
+		surface_material.metallic = 0
+		surface_material.roughness = 1.0
+		surface_material.metallic_specular = 0.0
+		surface_material.emission_enabled = false
+		
+		
+	
 
 # init_pending is set by the stage once the tree location has stabilized
 # Designer note: Set this as false if the parent isn't DominoLevel
@@ -80,13 +87,14 @@ var dominos_in_zone: Dictionary = {} # Using a Dictionary as a Set
 @onready var current_renderer = ProjectSettings.get_setting("rendering/renderer/rendering_method")
 var surface_material : StandardMaterial3D = null
 # Called when the node enters the scene tree for the first time.
-var noise:FastNoiseLite
-var noise_tex:NoiseTexture2D
+var noise:FastNoiseLite = null
+var noise_tex:NoiseTexture2D = null
 func _ready() -> void:
 	noise = FastNoiseLite.new()
 	noise.frequency = 0.17 # High frequency = tiny sparkles
 	noise_tex = NoiseTexture2D.new()
 	noise_tex.noise = noise
+	surface_material = null
 	wild_glitter_light.visible = false
 	debug_mesh.queue_free()
 
@@ -100,7 +108,10 @@ func _exit_tree() -> void:
 
 func _notification(what):
 	if what == NOTIFICATION_PREDELETE:
+		if is_wildcard:
+			print("Predelete Wildcard")
 		# Final cleanup: This is where you kill RIDs
+		surface_material.roughness_texture = null
 		surface_material = null
 		noise_tex.noise = null
 		noise = null
@@ -129,42 +140,29 @@ func update_domino_look():
 	
 	var image: Node3D
 	if is_wildcard:
-		image = DominoStack.wildcard_domino
-		if image.get_parent() == mesh_container:
-			printerr("Adding without resetting")
-		elif null != image.get_parent():
-			printerr("Orphan wild card!")
-		else:
-			mesh_container.add_child(image)
+		image = DominoStack.draw_wildcard(mesh_container)
+		if image == null:
+			printerr("Unable to draw wildcard", self)
+			return
 	else:
 		image = DominoStack.draw_from_stack(id, mesh_container)
 		if image == null:
-			printerr("Inable to draw", self)
+			printerr("Unable to draw", self)
 			return
 	for child in image.get_children():
 		var mat = child.get_active_material(0)
 		if "TableTop" == get_parent().name:
+			# Dominoes on the table should be drawn stacked
+			# This is a visual bug fix for Mobile render
 			mat.render_priority = global_transform.origin.y * 10
 		if child.name == "Surface":
 			if surface_material == null:
-				surface_material = mat.duplicate()
-				surface_material.albedo_color = STANDARD_COLOR
-				surface_material.metallic = 0
-				surface_material.roughness = 1.0
-				surface_material.emission_enabled = false
-				surface_material.roughness_texture = null
-				surface_material.metallic_specular = 0
-				surface_material.emission_enabled = false
-				child.set_surface_override_material(0, mat)
-			else:
-				surface_material.albedo_color = STANDARD_COLOR
-				surface_material.metallic = 0
-				surface_material.roughness = 1.0
-				surface_material.emission_enabled = false
-				surface_material.roughness_texture = null
-				surface_material.metallic_specular = 0
-				surface_material.emission_enabled = false
-				child.set_surface_override_material(0, surface_material)
+				if mat.albedo_color == WILDGOLD_COLOR:
+					surface_material = mat
+				else:
+					surface_material = mat.duplicate()
+			setup_surface_material(is_wildcard)
+			child.set_surface_override_material(0, surface_material)
 	# Fixed assignment of large on top
 	if id.y==value_t and not id.x==id.y:
 		mesh_container.rotation = Vector3.RIGHT * PI
@@ -197,8 +195,8 @@ func _process(delta: float) -> void:
 	if not null == surface_material:
 		if is_wildcard:
 			# Check to see if the visual effect is not correct
-			if (not wild_glitter_light.visible or
-				not surface_material.albedo_color == WILDGOLD_COLOR):
+			if not (wild_glitter_light.visible or
+				surface_material.albedo_color == WILDGOLD_COLOR):
 					# Trigger the missing visual effects
 					is_wildcard = _is_wildcard
 			# These cause a flicker TODO: Implement this as a shader
@@ -239,9 +237,11 @@ func touched():
 	# Update the timestamp for the next valid touch
 	last_touch_time = current_time
 	
-	print("Touched ", face, " on ", self, " to test ", GameManager.get_capture_point())
+	# print("Touched ", face, " on ", self, " to test ", GameManager.get_capture_point())
 	if face=="up" and GameManager.get_capture_point():
 		if GameManager.get_capture_point().collectable:
+			if Input.is_key_pressed(KEY_ALT):
+				GameManager.click_streak += 10
 			if Input.is_key_pressed(KEY_CTRL) or Input.is_key_pressed(KEY_META):
 				# Cross-platform check
 				GameManager.get_capture_point().collect_new_domino(self)

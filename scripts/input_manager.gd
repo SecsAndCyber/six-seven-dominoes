@@ -45,4 +45,4 @@ func _perform_raycast(screen_pos: Vector2) -> void:
 		# Check if the hit object is one of your dominos
 		if hit_object is PhysicsBody3D and hit_object.has_method("touched"):
 			hit_object.touched()
-			print("Pushed: ", hit_object.name)
+			# print("Pushed: ", hit_object.name)

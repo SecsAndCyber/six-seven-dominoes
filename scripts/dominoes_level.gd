@@ -75,7 +75,8 @@ func shuffle_live_dominoes(live_dominos):
 		b_index += 1
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-const LEVEL_RESET_DELAY: int = 250 # .25 second in milliseconds
+const LEVEL_RESET_DELAY_MSEC: int = 250 # .25 second in milliseconds
+const LEVEL_RESET_DELAY_SEC: int = int(LEVEL_RESET_DELAY_MSEC * .001)
 func _process(_delta: float) -> void:
 	if not ready_done:
 		return
@@ -111,7 +112,7 @@ func _process(_delta: float) -> void:
 			lost = false
 		if lost:
 			pre_loss = true
-			get_tree().create_timer(LEVEL_RESET_DELAY / 100).timeout.connect(
+			get_tree().create_timer(LEVEL_RESET_DELAY_SEC).timeout.connect(
 				func():
 					GameManager.level_complete = 0xDEADBEEF
 			)
@@ -120,7 +121,7 @@ func is_game_active() -> bool:
 	if pre_loss:
 		return false
 	if GameManager.board_dominos.size() == 0:
-		GameManager.level_complete = Time.get_ticks_msec() + LEVEL_RESET_DELAY
+		GameManager.level_complete = Time.get_ticks_msec() + LEVEL_RESET_DELAY_MSEC
 		return false
 	return true
 

@@ -45,6 +45,7 @@ func _ready() -> void:
 			dominos_in_hand.append(child)
 	get_tree().create_timer(0.05).timeout.connect(fix_ordering)
 func fix_ordering():
+	# This function fixes a visual bug in Mobile render
 	if _ready_done:
 		return
 	var i = 0

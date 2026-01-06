@@ -1,5 +1,6 @@
 extends Camera3D
 
+signal cancel_button_pressed
 @onready var camera_environment: Environment = $".".environment
 @onready var parent: Node3D = $".".get_parent()
 @onready var coin: Coin = $CoinsLabel/Coin
@@ -59,3 +60,7 @@ func update_ui(_delta:float = 0.0):
 		streak_label.text = GameManager.click_streak_string
 	if coins_label:
 		coins_label.text = GameManager.coins_string
+
+
+func _cancel_button_pressed() -> void:
+	cancel_button_pressed.emit()

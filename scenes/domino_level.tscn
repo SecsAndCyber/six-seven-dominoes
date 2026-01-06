@@ -93,6 +93,7 @@ text = "-50 Coins"
 font_size = 22
 outline_size = 9
 
+[connection signal="cancel_button_pressed" from="Camera3D" to="." method="_on_cancel_button_pressed"]
 [connection signal="child_exiting_tree" from="TableTop" to="." method="_on_table_top_child_exiting_tree"]
 [connection signal="child_exiting_tree" from="Hand" to="." method="_on_hand_child_exiting_tree"]
 [connection signal="button_pressed" from="BuyWildcard/Button3D" to="." method="_on_buy_wild_button_pressed"]

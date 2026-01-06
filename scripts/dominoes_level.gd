@@ -10,6 +10,7 @@ extends Node3D
 @onready var debug_label: Label3D = $Camera3D/DebugLabel
 @onready var coins_label: Label3D = $Camera3D/CoinsLabel
 @onready var buy_wildcard: Node3D = $BuyWildcard
+@onready var cancel_button_3d: BoxButton3D = $Camera3D/DebugLabel/Button3D
 
 # Called when the node enters the scene tree for the first time.
 var pre_loss:bool = false
@@ -185,3 +186,7 @@ func _on_buy_wild_button_pressed() -> void:
 		if GameManager.coins >= 50:
 			hand.create_wild_card(hand, hand.wild_card_location)
 			GameManager.coins -= 50
+
+
+func _on_cancel_button_pressed() -> void:
+	GameManager.advance_to_level("res://scenes/main_menu.tscn", true)

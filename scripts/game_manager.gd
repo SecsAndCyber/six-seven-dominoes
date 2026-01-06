@@ -93,7 +93,7 @@ func clear_hand(score:bool):
 	var coin_graphics = []
 	while hand_dominos.size():
 		var db = hand_dominos.pop_back()
-		if score:
+		if score and not is_transitioning:
 			var coin:Coin = active_game_level.hand.coin_prefab_scene.instantiate()
 			coin_graphics.append(coin)
 			coin.set_collision_layer_value(1, false)
@@ -104,14 +104,14 @@ func clear_hand(score:bool):
 			db.get_parent().add_child(coin)
 			coin.global_transform.origin = db.global_transform.origin
 			db.get_parent().remove_child(db)
-			await get_tree().create_timer(0.2).timeout
+			await get_tree().create_timer(0.2).timeout			
 			coin.animate_to_position_free(
 				active_game_level.hand.float_point.global_transform.origin,
 				active_game_level.hand.coin_capture.global_transform.origin,
 				1.0
 			).finished.connect(func(): GameManager.coins += 1)
 		remove_domino(db)
-	if score:
+	if score and not is_transitioning:
 		await get_tree().create_timer(2).timeout
 	
 
@@ -145,7 +145,8 @@ func advance_to_level(level_path:String, prevent_redirection:bool=false) -> void
 	else:
 		dominos_abandoned = 0
 	for db in to_remove:
-		db.get_parent().remove_child(db)
+		if db.is_inside_tree():
+			db.get_parent().remove_child(db)
 		remove_domino(db)
 	if active_capture_point:
 		if not null == get_capture_point().active_block:

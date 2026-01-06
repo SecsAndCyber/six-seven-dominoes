@@ -5,10 +5,6 @@ extends Node
 func _ready() -> void:
 	pass # Replace with function body.
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(_delta):
-	pass
-
 func _input(event):
 	# print(event)
 	if (event is InputEventMouseButton) and event.is_pressed():

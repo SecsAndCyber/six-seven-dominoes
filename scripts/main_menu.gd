@@ -35,36 +35,17 @@ func change_menu(new_menu: Node3D) -> void:
 			for button in buttons as Array[PhysicalBone3D]:
 				button.set_collision_layer_value(1, false)
 
-func update_ui(_delta:float = 0.0):
-	if OS.is_debug_build():
-		debug_label.text = "DEV {LevelName}".format({
-			'LevelName':get_node("/root/").get_children()[3].name,
-		})
-	elif debug_label.text.length() > 0:
-		debug_label.text = ""
-	streak_label.text = "%s Streak" % ["•".repeat(GameManager.click_streak)]
-	coins_label.text = "%s Coins" % [GameManager.coins]
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	GameManager.loadScore()
-	update_ui()
+	
 	for db in find_children("*", "DominoBlock", true, true):
 		db.freeze = true
 		db.set_collision_layer_value(1, false)
 		prints("Adding", db, "to GameManager")
 		GameManager.board_dominos.append(db)
 	change_menu(splash)
-
-#func _input(event):
-	#if splash.visible:
-		#if event is InputEventMouseButton or event is InputEventScreenTouch:
-			#if event.is_pressed():
-				#change_menu(menu_a)
-	#elif menu_a.visible:
-		#if event is InputEventMouseButton or event is InputEventScreenTouch:
-			#if event.is_pressed():
-				#GameManager.advance_to_level(next_level)
 
 
 func _on_splash_button_3d_button_pressed() -> void:

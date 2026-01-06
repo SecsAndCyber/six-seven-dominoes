@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://dro31wxbi680v"]
+[gd_scene load_steps=4 format=3 uid="uid://dro31wxbi680v"]
 
 [ext_resource type="PackedScene" uid="uid://dfubvgaqmy0rk" path="res://scenes/Coin.tscn" id="1_1qhs2"]
+[ext_resource type="Script" uid="uid://djgk532rv10hq" path="res://scripts/game_camera.gd" id="1_qq1a7"]
 
 [sub_resource type="Environment" id="Environment_5ildb"]
 background_energy_multiplier = 4.0
@@ -8,8 +9,6 @@ ambient_light_source = 3
 ambient_light_color = Color(1, 1, 1, 1)
 tonemap_mode = 3
 tonemap_white = 0.5
-ssao_enabled = true
-ssil_enabled = true
 glow_intensity = 0.2
 glow_bloom = 1.0
 glow_hdr_threshold = 3.0
@@ -22,6 +21,7 @@ environment = SubResource("Environment_5ildb")
 current = true
 near = 1.0
 far = 100.0
+script = ExtResource("1_qq1a7")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.41712725, 0.7032206, 0.57574797, -0.75758314, -0.08092095, 0.6477033, 0.50206834, -0.7063516, 0.49899366, 0, 10, 0)

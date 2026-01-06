@@ -25,21 +25,23 @@ func setup_surface_material(wild:bool):
 		wild_glitter_light.visible = true
 		surface_material.roughness_texture = noise_tex
 		surface_material.albedo_color = WILDGOLD_COLOR
-		surface_material.metallic = .35
-		surface_material.roughness = 1.0
-		surface_material.metallic_specular = 1.0
-		surface_material.emission_enabled = true
-		surface_material.emission = WILDGOLD_COLOR
-		surface_material.emission_operator = surface_material.EMISSION_OP_ADD
-		surface_material.emission_energy_multiplier = .12
+		if not OS.has_feature("simple_colors"):
+			surface_material.metallic = .35
+			surface_material.roughness = 1.0
+			surface_material.metallic_specular = 1.0
+			surface_material.emission_enabled = true
+			surface_material.emission = WILDGOLD_COLOR
+			surface_material.emission_operator = surface_material.EMISSION_OP_ADD
+			surface_material.emission_energy_multiplier = .12
 	else:
 		wild_glitter_light.visible = false
 		surface_material.roughness_texture = null
 		surface_material.albedo_color = STANDARD_COLOR
-		surface_material.metallic = 0
-		surface_material.roughness = 1.0
-		surface_material.metallic_specular = 0.0
-		surface_material.emission_enabled = false
+		if not OS.has_feature("simple_colors"):
+			surface_material.metallic = 0
+			surface_material.roughness = 1.0
+			surface_material.metallic_specular = 0.0
+			surface_material.emission_enabled = false
 
 # init_pending is set by the stage once the tree location has stabilized
 # Designer note: Set this as false if the parent isn't DominoLevel
@@ -181,7 +183,7 @@ func _to_string() -> String:
 	})
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if init_pending:
 		return
 	if not is_inside_tree():
@@ -199,12 +201,19 @@ func _process(delta: float) -> void:
 			# These cause a flicker TODO: Implement this as a shader
 			# Due to above check, this only occurs inside the single
 			# Wildcard permitted per screen
-			wild_glitter_light.light_energy = randf_range(0.8, 1.2)
-			noise.seed = randi()
-
+			if not OS.has_feature("simple_colors"):
+				wild_glitter_light.light_energy = randf_range(0.8, 1.2)
+				noise.seed = randi()
 	if under_dominos():
 		face = "down"
 		start_flip = ""
+
+
+func _physics_process(delta: float) -> void:
+	if init_pending:
+		return
+	if not is_inside_tree():
+		return
 	
 	if not start_flip == "":
 		if start_flip == "down":

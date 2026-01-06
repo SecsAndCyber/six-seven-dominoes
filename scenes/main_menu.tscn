@@ -1,7 +1,8 @@
-[gd_scene load_steps=9 format=3 uid="uid://0jk7qqutmbqj"]
+[gd_scene load_steps=10 format=3 uid="uid://0jk7qqutmbqj"]
 
 [ext_resource type="Script" uid="uid://dde3871yfxfah" path="res://scripts/main_menu.gd" id="1_ekxnf"]
 [ext_resource type="PackedScene" uid="uid://dro31wxbi680v" path="res://scenes/game_camera.tscn" id="1_l6cm7"]
+[ext_resource type="Environment" uid="uid://bedt4yliqs882" path="res://scenes/camera_environment.tres" id="3_8ln24"]
 [ext_resource type="PackedScene" uid="uid://dartuwkh4q1a7" path="res://scenes/domino_block.tscn" id="3_bqqt6"]
 [ext_resource type="PackedScene" uid="uid://dk2qcxsr5sajx" path="res://scenes/button_box_3d.tscn" id="4_wu84c"]
 
@@ -23,6 +24,7 @@ script = ExtResource("1_ekxnf")
 
 [node name="Camera3D" parent="." instance=ExtResource("1_l6cm7")]
 transform = Transform3D(1, 0, 0, 0, 0.26927286, 0.96306396, 0, -0.96306396, 0.26927286, 0, 7.699459, 4.5392)
+environment = ExtResource("3_8ln24")
 
 [node name="Splash" type="Node3D" parent="Camera3D"]
 
@@ -157,15 +159,15 @@ outline_size = 64
 [node name="ContactButton3D" parent="Camera3D/MenuAbout/DominoBlock3" instance=ExtResource("4_wu84c")]
 transform = Transform3D(1, 0, 0, 0, 17.40539, 0, 0, 0, 1.9210322, -0.690426, -7.759466, -0.07864833)
 
-[node name="Backdrop" type="StaticBody3D" parent="."]
+[node name="TableTop" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.036530018, 0.082410336, -0.19729328)
 collision_layer = 4
 physics_material_override = SubResource("PhysicsMaterial_l6cm7")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Backdrop"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TableTop"]
 shape = SubResource("BoxShape3D_ekxnf")
 
-[node name="TableTop2" type="MeshInstance3D" parent="Backdrop"]
+[node name="TableTop2" type="MeshInstance3D" parent="TableTop"]
 mesh = SubResource("PlaneMesh_bqqt6")
 skeleton = NodePath("../..")
 

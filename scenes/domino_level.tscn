@@ -1,9 +1,10 @@
-[gd_scene load_steps=11 format=3 uid="uid://bpwmck6ndoo6o"]
+[gd_scene load_steps=12 format=3 uid="uid://bpwmck6ndoo6o"]
 
 [ext_resource type="Script" uid="uid://b51uhpmrsglm" path="res://scripts/dominoes_level.gd" id="1_ahtht"]
 [ext_resource type="PackedScene" uid="uid://dhamkvtbdtbed" path="res://scenes/capture_point.tscn" id="2_gdtbw"]
 [ext_resource type="PackedScene" uid="uid://dro31wxbi680v" path="res://scenes/game_camera.tscn" id="3_lhfmt"]
 [ext_resource type="PackedScene" uid="uid://dartuwkh4q1a7" path="res://scenes/domino_block.tscn" id="4_gjmw3"]
+[ext_resource type="Environment" uid="uid://bedt4yliqs882" path="res://scenes/camera_environment.tres" id="4_lhfmt"]
 [ext_resource type="PackedScene" uid="uid://kb6wm8lyrkvh" path="res://scenes/hand_rack.tscn" id="5_0aixa"]
 [ext_resource type="PackedScene" uid="uid://dk2qcxsr5sajx" path="res://scenes/button_box_3d.tscn" id="6_gdtbw"]
 
@@ -30,6 +31,7 @@ collection_speed = 35.0
 
 [node name="Camera3D" parent="." instance=ExtResource("3_lhfmt")]
 transform = Transform3D(1, 0, 0, 0, 0.26927286, 0.96306396, 0, -0.96306396, 0.26927286, 0, 8.933517, 4.1343374)
+environment = ExtResource("4_lhfmt")
 
 [node name="TableTop" type="StaticBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.036530018, 0.082410336, -0.19729328)

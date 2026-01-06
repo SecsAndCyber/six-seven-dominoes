@@ -17,9 +17,9 @@ func save_state():
 	var file = FileAccess.open(instance._save_path, FileAccess.WRITE)
 	if file:
 		file.store_line(JSON.stringify({
-			'CurrentLevel':instance.last_played,
-			'ClickStreak':instance.click_streak,
-			'CoinsCollected':instance.coins,
+			'CurrentLevel':instance.internal_last_played,
+			'ClickStreak':instance.internal_click_streak,
+			'CoinsCollected':instance.internal_coins,
 		}))
 	else:
 		printerr("Unable to save", instance._save_path)
@@ -40,10 +40,32 @@ func loadScore():
 		printerr("Unable to open", instance._save_path)
 	
 # ++++++++++++ Persistent Values
-var last_played : String = ""
-var click_streak : int = 0
-var coins : int = 0
+var internal_last_played : String = ""
+var internal_click_streak : int = 0
+var internal_coins : int = 0
 # ++++++++++++ End Persistent Values
+var coins_string: String = ""
+var coins: int:
+	get():
+		return internal_coins
+	set(val):
+		internal_coins = val
+		coins_string = "%s Coins" % [val]
+
+var click_streak_string: String = ""
+var click_streak: int:
+	get():
+		return internal_click_streak
+	set(val):
+		internal_click_streak = val
+		click_streak_string = "%s Streak" % ["•".repeat(val)]
+
+var last_played: String:
+	get():
+		return internal_last_played
+	set(val):
+		internal_last_played = val
+
 
 # 0 = not complete
 # 0xDEADBEEF = lost
@@ -83,7 +105,7 @@ func clear_hand(score:bool):
 				active_game_level.hand.float_point.global_transform.origin,
 				active_game_level.hand.coin_capture.global_transform.origin,
 				1.0
-			).connect(func(): GameManager.coins += 1)
+			).finished.connect(func(): GameManager.coins += 1)
 		remove_domino(db)
 	if score:
 		await get_tree().create_timer(2).timeout
@@ -139,10 +161,10 @@ func advance_to_level(level_path:String, prevent_redirection:bool=false) -> void
 		pass
 	else:
 		if "/levels/" in level_path:
-			last_played = level_path
-		if last_played and level_path == STARTING_LEVEL:
-			level_path = last_played
-		if not "/levels/" in last_played:
+			internal_last_played = level_path
+		if internal_last_played and level_path == STARTING_LEVEL:
+			level_path = internal_last_played
+		if not "/levels/" in internal_last_played:
 			level_path = STARTING_LEVEL
 		
 	save_state()

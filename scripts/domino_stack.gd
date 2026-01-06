@@ -17,10 +17,26 @@ func domino_factory(id:Vector2i):
 	var scene_path = domino_scene(id)
 	if ResourceLoader.exists(scene_path):
 		preloader[id] = ResourceLoader.load(scene_path)
-		return preloader[id].instantiate()
+		return simplify_materials(preloader[id].instantiate())
 	else:
 		printerr("Tried to load missing file ", scene_path)
 		return null
+
+func simplify_materials(node:Node3D):
+	if OS.has_feature("simple_colors"):
+		if node.find_child(
+			'RenderTopPip',true, false
+			):
+			node.find_child(
+			'RenderTopPip',true, false
+			).get_active_material(1).albedo_color = "#000000"
+		if node.find_child(
+			'RenderBottomPip',true, false
+			):
+			node.find_child(
+			'RenderBottomPip',true, false
+			).get_active_material(1).albedo_color = "#000000"
+	return node
 
 func _ready():
 	for id in domino_ids():

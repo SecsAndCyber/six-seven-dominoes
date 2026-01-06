@@ -17,16 +17,7 @@ var pre_win:bool = false
 var max_pair_domino: DominoBlock = null
 var ready_done:bool = false
 
-func update_ui(_delta:float = 0.0):
-	if OS.is_debug_build():
-		debug_label.text = "{LevelName} FPS:{FPS}".format({
-			'LevelName':get_node("/root/").get_children()[3].name,
-			'FPS':str(int(1.0 / _delta)) if _delta else '??'
-		})
-	elif debug_label.text.length() > 0:
-		debug_label.text = ""
-	streak_label.text = "%s Streak" % ["•".repeat(GameManager.click_streak)]
-	coins_label.text = "%s Coins" % [GameManager.coins]
+func update_ui():
 	setup_buy_button()
 
 func setup_buy_button():
@@ -56,7 +47,7 @@ func setup_buy_button():
 func _ready() -> void:
 	pre_loss = false
 	pre_win = false
-	update_ui(0)
+	
 	for child in get_children():
 		if child is DominoBlock:
 			remove_child(child)
@@ -123,15 +114,16 @@ const LEVEL_RESET_DELAY_SEC: float = .25
 func _process(_delta: float) -> void:
 	if not ready_done or GameManager.is_transitioning:
 		return
-	update_ui(_delta)
+	update_ui()
 	if GameManager.level_complete == 0xDEADBEEF:
 		return GameManager.advance_to_level("res://scenes/loss_menu.tscn", true)
 	if pre_loss:
 		return
 	if not null == max_pair_domino and not null == max_pair_domino.surface_material:
-		var pips_node = max_pair_domino.get_node('MeshContainer').find_child('RenderTopPip',true, false)
-		table_top.get_node("TableTop2").get_active_material(0).albedo_color = \
-			pips_node.get_active_material(1).albedo_color
+		if not OS.has_feature("simple_colors"):
+			var pips_node = max_pair_domino.get_node('MeshContainer').find_child('RenderTopPip',true, false)
+			table_top.get_node("TableTop2").get_active_material(0).albedo_color = \
+				pips_node.get_active_material(1).albedo_color
 		max_pair_domino = null # We have set the table color
 	if GameManager.level_complete and GameManager.level_complete < Time.get_ticks_msec():
 		GameManager.last_played = next_level

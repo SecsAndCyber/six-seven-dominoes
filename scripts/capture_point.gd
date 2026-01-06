@@ -51,7 +51,7 @@ func _process(_delta: float) -> void:
 	if is_instance_valid(active_block):
 		setup_active_block()
 	else:
-		active_block = find_child("*", true, false) as DominoBlock
+		printerr("Missing active_block")
 
 func _physics_process(delta: float) -> void:
 	if not moving_block == null:

@@ -2,6 +2,7 @@ class_name GameManagerClass
 extends Node
 
 var STARTING_LEVEL: String = "res://scenes/level_4_0_startingLevel.tscn"
+var is_low_spec: bool = false
 
 static var instance:GameManagerClass = null
 func _init():
@@ -10,6 +11,9 @@ func _init():
 		queue_free()
 		return
 	GameManagerClass.instance = self
+	if RenderingServer.get_current_rendering_method() == "gl_compatibility":
+		is_low_spec = true
+		
 	loadScore()
 	
 var _save_path = "user://67dominos.state"

@@ -10,7 +10,7 @@ extends Camera3D
 @onready var coins_label: Label3D = $"."/CoinsLabel
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	if OS.has_feature("simple_colors"):
+	if GameManager.is_low_spec:
 		coin.queue_free()
 
 func _process(delta: float) -> void:
@@ -20,7 +20,7 @@ func _enter_tree() -> void:
 	streak_label = $"."/StreakLabel
 	debug_label = $"."/DebugLabel
 	coins_label = $"."/CoinsLabel
-	if OS.has_feature("simple_colors"):
+	if GameManager.is_low_spec:
 		parent = $".".get_parent()
 		camera_environment = $".".environment
 		directional_light_3d = $DirectionalLight3D
@@ -40,6 +40,7 @@ func _enter_tree() -> void:
 		else:
 			printerr("Unable to locate camera_environment")
 	else:
+		get_viewport().screen_space_aa = Viewport.SCREEN_SPACE_AA_SMAA
 		camera_environment = $".".environment
 		camera_environment.ssao_enabled = true
 		camera_environment.ssil_enabled = true

@@ -120,7 +120,7 @@ func _process(_delta: float) -> void:
 	if pre_loss:
 		return
 	if not null == max_pair_domino and not null == max_pair_domino.surface_material:
-		if not OS.has_feature("simple_colors"):
+		if not GameManager.is_low_spec:
 			var pips_node = max_pair_domino.get_node('MeshContainer').find_child('RenderTopPip',true, false)
 			table_top.get_node("TableTop2").get_active_material(0).albedo_color = \
 				pips_node.get_active_material(1).albedo_color

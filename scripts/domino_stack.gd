@@ -23,7 +23,7 @@ func domino_factory(id:Vector2i):
 		return null
 
 func simplify_materials(node:Node3D):
-	if OS.has_feature("simple_colors"):
+	if GameManager.is_low_spec:
 		if node.find_child(
 			'RenderTopPip',true, false
 			):

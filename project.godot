@@ -18,8 +18,8 @@ config/icon="uid://de10jor8sdkq5"
 
 [autoload]
 
-InputManager="*res://scripts/input_manager.gd"
 GameManager="*res://scripts/game_manager.gd"
+InputManager="*res://scripts/input_manager.gd"
 DominoStack="*res://scripts/domino_stack.gd"
 
 [dotnet]
@@ -47,4 +47,3 @@ sensors/enable_gyroscope=true
 textures/vram_compression/import_s3tc_bptc=true
 textures/vram_compression/import_etc2_astc=true
 anti_aliasing/quality/msaa_3d=2
-anti_aliasing/quality/screen_space_aa=2

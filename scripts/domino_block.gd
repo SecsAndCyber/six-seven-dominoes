@@ -25,7 +25,7 @@ func setup_surface_material(wild:bool):
 		wild_glitter_light.visible = true
 		surface_material.roughness_texture = noise_tex
 		surface_material.albedo_color = WILDGOLD_COLOR
-		if not OS.has_feature("simple_colors"):
+		if not GameManager.is_low_spec:
 			surface_material.metallic = .35
 			surface_material.roughness = 1.0
 			surface_material.metallic_specular = 1.0
@@ -37,7 +37,7 @@ func setup_surface_material(wild:bool):
 		wild_glitter_light.visible = false
 		surface_material.roughness_texture = null
 		surface_material.albedo_color = STANDARD_COLOR
-		if not OS.has_feature("simple_colors"):
+		if not GameManager.is_low_spec:
 			surface_material.metallic = 0
 			surface_material.roughness = 1.0
 			surface_material.metallic_specular = 0.0
@@ -201,7 +201,7 @@ func _process(_delta: float) -> void:
 			# These cause a flicker TODO: Implement this as a shader
 			# Due to above check, this only occurs inside the single
 			# Wildcard permitted per screen
-			if not OS.has_feature("simple_colors"):
+			if not GameManager.is_low_spec:
 				wild_glitter_light.light_energy = randf_range(0.8, 1.2)
 				noise.seed = randi()
 	if under_dominos():

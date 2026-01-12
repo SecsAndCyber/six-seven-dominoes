@@ -85,8 +85,13 @@ face = "down"
 [node name="DominoBlock19" parent="TableSpace" instance=ExtResource("2_b7ejl")]
 transform = Transform3D(-2.0338028e-08, -0.4652798, -0.7113472, 0.85000014, -3.715469e-08, 3.5527137e-15, -3.1093975e-08, -0.7113472, 0.4652798, 6.210306, 0.9831992, 1.3193064)
 
+[node name="DominoBlock22" parent="TableSpace" instance=ExtResource("2_b7ejl")]
+transform = Transform3D(-3.7154685e-08, -0.8500001, 0, 0.85000014, -3.7154685e-08, 0, 0, 0, 0.8500001, -3.678444, 1.3750715, -0.7168259)
+
 [node name="DominoBlock20" parent="TableSpace" instance=ExtResource("2_b7ejl")]
 transform = Transform3D(-2.0338028e-08, -0.4652798, -0.7113472, 0.85000014, -3.715469e-08, 3.5527137e-15, -3.1093975e-08, -0.7113472, 0.4652798, -5.678608, 0.9831992, -1.5113869)
+face = "down"
 
 [node name="DominoBlock21" parent="TableSpace" instance=ExtResource("2_b7ejl")]
 transform = Transform3D(2.9857013e-08, 0.68304884, -0.50590944, 0.85000014, -3.715469e-08, 4.1135876e-15, -2.2114005e-08, -0.50590944, -0.68304884, -1.3928261, 0.9831992, -1.0333154)
+face = "down"

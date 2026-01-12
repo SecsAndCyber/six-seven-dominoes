@@ -11,7 +11,7 @@
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_5ildb"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_br6f8"]
-size = Vector3(40, 0.25, 16)
+size = Vector3(50, 0.25, 16)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1x550"]
 albedo_color = Color(0.5264201, 0.3272072, 0.057221487, 1)
@@ -19,7 +19,7 @@ metallic_specular = 0.15
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_5ildb"]
 material = SubResource("StandardMaterial3D_1x550")
-size = Vector2(40, 16)
+size = Vector2(50, 16)
 
 [node name="TableSpace" type="Node3D"]
 script = ExtResource("1_ahtht")
@@ -30,7 +30,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.8236637, 0.25, 6.5)
 collection_speed = 35.0
 
 [node name="Camera3D" parent="." instance=ExtResource("3_lhfmt")]
-transform = Transform3D(1, 0, 0, 0, 0.26927286, 0.96306396, 0, -0.96306396, 0.26927286, 0, 8.933517, 4.1343374)
+transform = Transform3D(1, 0, 0, 0, 0.26927286, 0.96306396, 0, -0.96306396, 0.26927286, 0, 9.184843, 4.1343374)
 environment = ExtResource("4_lhfmt")
 
 [node name="TableTop" type="StaticBody3D" parent="."]

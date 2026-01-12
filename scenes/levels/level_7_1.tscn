@@ -7,6 +7,7 @@
 
 [node name="TableSpace" parent="." instance=ExtResource("1_076j8")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.01643467, -0.008822918, 0.016578913)
+next_level = "res://scenes/levels/level_7_2.tscn"
 domino_scale = 0.9
 
 [node name="DominoBlock" parent="TableSpace" instance=ExtResource("2_xe01e")]
@@ -50,11 +51,11 @@ transform = Transform3D(-2.4585942e-08, -0.56246084, 0.7025936, 0.9, -3.934025e-
 face = "down"
 
 [node name="DominoBlock11" parent="TableSpace" instance=ExtResource("2_xe01e")]
-transform = Transform3D(-7.758388e-09, -0.17749119, 0.8823247, 0.9, -3.934025e-08, 7.9936056e-16, 3.8567638e-08, 0.8823247, 0.17749119, 3.9023218, 0.4431497, 3.5144553)
+transform = Transform3D(-2.450707e-08, -0.5606563, 0.7040342, 0.90000004, -3.9340247e-08, -9.2509894e-17, 3.0774316e-08, 0.7040342, 0.5606563, 3.838177, 0.4431497, 2.805346)
 face = "down"
 
 [node name="DominoBlock12" parent="TableSpace" instance=ExtResource("2_xe01e")]
-transform = Transform3D(-2.0218739e-08, -0.46255085, 0.7720406, 0.9, -3.934025e-08, -1.5987207e-15, 3.3746964e-08, 0.7720406, 0.46255085, 4.821515, 0.9100474, 1.8494449)
+transform = Transform3D(-2.0218739e-08, -0.5572338, 0.7067464, 0.9, -3.9019014e-08, -5.0171427e-09, 3.3746964e-08, 0.7067464, 0.5572338, 4.6545672, 0.9100474, 1.717815)
 face = "down"
 
 [node name="DominoBlock13" parent="TableSpace" instance=ExtResource("2_xe01e")]

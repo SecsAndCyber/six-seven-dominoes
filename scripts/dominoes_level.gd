@@ -86,9 +86,9 @@ func _ready() -> void:
 
 func _on_window_resized():
 	var cam = get_viewport().get_camera_3d()
-	var buy_wildcard_pos = Vector2(get_viewport().get_visible_rect().size.x - 50,
+	var buy_wildcard_pos = Vector2(get_viewport().get_visible_rect().size.x - 75,
 							get_viewport().get_visible_rect().size.y - 150)
-	var world_pos = cam.project_position(buy_wildcard_pos, 7.5) # 10.0 is distance from camera
+	var world_pos = cam.project_position(buy_wildcard_pos, 7.9) # 10.0 is distance from camera
 	
 	buy_wildcard.global_position = world_pos
 

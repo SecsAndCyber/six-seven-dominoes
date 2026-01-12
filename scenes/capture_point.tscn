@@ -7,7 +7,7 @@
 script = ExtResource("1_2d7m5")
 
 [node name="ActiveDominoBlock" parent="." instance=ExtResource("2_wd0k0")]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0.5)
+transform = Transform3D(1.9106855e-15, 4.371139e-08, 1, 1, -4.371139e-08, 0, 4.371139e-08, 1, -4.371139e-08, 0, 0, 0.5)
 
 [node name="FloatPoint" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -6)

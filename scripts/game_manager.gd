@@ -3,6 +3,14 @@ extends Node
 
 var STARTING_LEVEL: String = "res://scenes/level_4_0_startingLevel.tscn"
 var is_low_spec: bool = false
+var is_cheat: bool:
+	get():
+		return OS.is_debug_build()
+var game_pieces_scale: float:
+	get():
+		if null == active_game_level:
+			return 1.0
+		return active_game_level.domino_scale
 
 static var instance:GameManagerClass = null
 func _init():
@@ -53,8 +61,10 @@ var coins: int:
 	get():
 		return internal_coins
 	set(val):
+		coin_changed.emit()
 		internal_coins = val
 		coins_string = "%s Coins" % [val]
+signal coin_changed
 
 var click_streak_string: String = ""
 var click_streak: int:
@@ -91,6 +101,30 @@ var hand_dominos: Array[DominoBlock] = []
 @export var pause:bool = true
 func clear_hand(score:bool):
 	var coin_graphics = []
+	if hand_dominos.size() == 0:
+		var center_spawn = active_game_level.hand.global_transform.origin
+		for i in range(25):
+			var coin: Coin = active_game_level.hand.coin_prefab_scene.instantiate()
+			coin_graphics.append(coin)
+			coin.set_collision_layer_value(1, false)
+			coin.set_collision_layer_value(2, false)
+			coin.spin_velocity = 0
+			coin.scale = Vector3(1,1,1)
+			coin.rotation = Vector3(0,0,90)
+			# Add to scene
+			active_game_level.add_child(coin)
+			var burst_offset = Vector3(randf_range(-2, 2), 0, 0)
+			coin.global_transform.origin = center_spawn + burst_offset
+			
+			# Animate the burst and then fly to the capture point
+			coin.animate_to_position_free(
+				active_game_level.hand.float_point.global_transform.origin,
+				active_game_level.hand.coin_capture.global_transform.origin,
+				randf_range(0.8, 1.5) # Varied speeds for a "fountain" effect
+			).finished.connect(func(): GameManager.coins += 1)
+			
+			# Stagger the spawns so it doesn't hitch the FPS
+			await get_tree().create_timer(0.0125).timeout
 	while hand_dominos.size():
 		var db = hand_dominos.pop_back()
 		if score and not is_transitioning:
@@ -126,6 +160,7 @@ func remove_domino(db: DominoBlock):
 
 func _ready() -> void:
 	prepare_level(null)
+	
 
 func prepare_level(dl:DominosLevel) -> void:
 	is_transitioning = true

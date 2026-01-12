@@ -42,7 +42,7 @@ func start_setting_domino(db: DominoBlock):
 	hand_ready_done = true
 	
 # Called when the node enters the scene tree for the first time.
-func _ready() -> void:
+func _ready() -> void:	
 	for child in get_children():
 		if child is DominoBlock:
 			dominos_in_hand.append(child)
@@ -97,6 +97,7 @@ func _process(_delta: float) -> void:
 	if GameManager.click_streak >= 5 and not has_wild_card:
 		if not GameManager.get_capture_point().has_wild:
 			create_wild_card(self, wild_card_location)
+
 
 func _physics_process(delta: float) -> void:
 	if not domino_drawn == null:

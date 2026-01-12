@@ -15,4 +15,5 @@ shape = SubResource("BoxShape3D_qorkh")
 debug_color = Color(0.81590277, 0.44436628, 0.20790601, 1)
 
 [node name="DebugMesh" type="MeshInstance3D" parent="."]
+cast_shadow = 0
 mesh = SubResource("BoxMesh_8i6ph")

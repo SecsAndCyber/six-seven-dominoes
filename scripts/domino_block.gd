@@ -191,6 +191,8 @@ func _process(_delta: float) -> void:
 	if look_update_needed:
 		look_update_needed = false
 		update_domino_look()
+	if get_parent().name == "TableTop":
+		scale = Vector3.ONE * GameManager.game_pieces_scale
 	if not null == surface_material:
 		if is_wildcard:
 			# Check to see if the visual effect is not correct
@@ -214,6 +216,7 @@ func _physics_process(delta: float) -> void:
 		return
 	if not is_inside_tree():
 		return
+	self.freeze = true
 	
 	if not start_flip == "":
 		if start_flip == "down":
@@ -248,11 +251,12 @@ func touched():
 	# print("Touched ", face, " on ", self, " to test ", GameManager.get_capture_point())
 	if face=="up" and GameManager.get_capture_point():
 		if GameManager.get_capture_point().collectable:
-			if Input.is_key_pressed(KEY_ALT):
-				GameManager.click_streak += 10
-			if Input.is_key_pressed(KEY_CTRL) or Input.is_key_pressed(KEY_META):
-				# Cross-platform check
-				GameManager.get_capture_point().collect_new_domino(self)
+			if GameManager.is_cheat:
+				if Input.is_key_pressed(KEY_ALT):
+					GameManager.click_streak += 10
+				if Input.is_key_pressed(KEY_CTRL) or Input.is_key_pressed(KEY_META):
+					# Cross-platform check
+					GameManager.get_capture_point().collect_new_domino(self)
 			if GameManager.get_capture_point().test_collection(self):
 				if not GameManager.get_capture_point().has_wild:
 					if GameManager.active_game_level.hand.has_wild_card:
@@ -264,11 +268,14 @@ func touched():
 			else:
 				start_flip = "down" if face == "up" else "up"
 	else:
-		print(area_3d.get_overlapping_bodies())
+		print(self, face , area_3d.get_overlapping_bodies(), under_dominos())
+		_on_area_3d_body_exited(self)
 
 func under_dominos() -> bool:
 	for body in area_3d.get_overlapping_bodies():
 		if body is DominoBlock:
+			if body == self:
+				continue
 			if body.get_parent() == get_parent():
 				return true
 			# ignore any moving blocks

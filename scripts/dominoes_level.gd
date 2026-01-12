@@ -2,6 +2,7 @@ class_name DominosLevel
 extends Node3D
 
 @export var next_level: String
+@export var domino_scale: float = 1.0
 @onready var table_top: StaticBody3D = $TableTop
 @onready var hand: HandRack = $Hand
 @onready var capture_point: CapturePoint = $CapturePoint
@@ -53,6 +54,7 @@ func _ready() -> void:
 		if child is DominoBlock:
 			remove_child(child)
 			table_top.add_child(child)
+			child.scale = Vector3.ONE * domino_scale
 	var live_dominos: Array[DominoBlock] = []
 	var stack_height = 0
 	GameManager.prepare_level(self)
@@ -75,11 +77,20 @@ func _ready() -> void:
 			child.init_pending = false
 	live_dominos += _board_dominos + _hand_dominos
 	shuffle_live_dominoes(live_dominos)
-	
 	capture_point.float_point.global_transform.origin.y = stack_height
 	capture_point.init()
 	ready_done = true
+	get_viewport().size_changed.connect(_on_window_resized)
+	_on_window_resized()
 	GameManager.is_transitioning = false
+
+func _on_window_resized():
+	var cam = get_viewport().get_camera_3d()
+	var buy_wildcard_pos = Vector2(get_viewport().get_visible_rect().size.x - 50,
+							get_viewport().get_visible_rect().size.y - 150)
+	var world_pos = cam.project_position(buy_wildcard_pos, 7.5) # 10.0 is distance from camera
+	
+	buy_wildcard.global_position = world_pos
 
 func shuffle_live_dominoes(live_dominos):
 	var domino_values: Array[Vector2i] = []
@@ -88,12 +99,12 @@ func shuffle_live_dominoes(live_dominos):
 	var b_index: int = 0
 	for db in live_dominos:
 		if not t in bs:
+			assert(t <= 7)
 			bs.append(t)
 		domino_values.append(Vector2i(t,bs[b_index]))
 		if b_index == bs.size()-1:
 			b_index = 0
 			t += 1
-			assert(t <= 7)
 		else:
 			b_index += 1
 	var max_pair:Vector2i
@@ -157,10 +168,9 @@ func is_level_won() -> bool:
 	if GameManager.level_complete != 0:
 		return true
 	if GameManager.board_dominos.size() == 0:
-		if GameManager.hand_dominos.size() > 0:
-			pre_win = true
-			# Clear the hand so we don't double-count if _process runs again
-			await GameManager.clear_hand(true)
+		pre_win = true
+		# Clear the hand so we don't double-count if _process runs again
+		await GameManager.clear_hand(true)
 		GameManager.level_complete = Time.get_ticks_msec() + LEVEL_RESET_DELAY_MSEC
 		
 		return true

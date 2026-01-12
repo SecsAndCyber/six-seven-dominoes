@@ -1,0 +1,92 @@
+[gd_scene load_steps=3 format=3 uid="uid://b850diy3s4tlc"]
+
+[ext_resource type="PackedScene" uid="uid://bpwmck6ndoo6o" path="res://scenes/domino_level.tscn" id="1_qvbbh"]
+[ext_resource type="PackedScene" uid="uid://dartuwkh4q1a7" path="res://scenes/domino_block.tscn" id="2_nndku"]
+
+[node name="Level_6_7" type="Node3D"]
+
+[node name="TableSpace" parent="." instance=ExtResource("1_qvbbh")]
+next_level = "res://scenes/levels/level_6_8.tscn"
+
+[node name="DominoBlock" parent="TableSpace" instance=ExtResource("2_nndku")]
+transform = Transform3D(-4.371139e-08, -1.0000001, 0, 1, -4.3711392e-08, 0, 0, 0, 1.0000001, -2.0578847, 0.4431497, -3.9971716)
+face = "down"
+
+[node name="DominoBlock2" parent="TableSpace" instance=ExtResource("2_nndku")]
+transform = Transform3D(-4.371139e-08, -1.0000001, 0, 1, -4.3711392e-08, 0, 0, 0, 1.0000001, 2.0346708, 0.4431497, -3.9971716)
+face = "down"
+
+[node name="DominoBlock3" parent="TableSpace" instance=ExtResource("2_nndku")]
+transform = Transform3D(-4.371139e-08, -1.0000001, 0, 1, -4.3711392e-08, 0, 0, 0, 1.0000001, -2.076375, 0.4431497, -0.8732486)
+face = "down"
+
+[node name="DominoBlock4" parent="TableSpace" instance=ExtResource("2_nndku")]
+transform = Transform3D(-4.371139e-08, -1.0000001, 0, 1, -4.3711392e-08, 0, 0, 0, 1.0000001, 2.0161805, 0.4431497, -0.8732486)
+face = "down"
+
+[node name="DominoBlock5" parent="TableSpace" instance=ExtResource("2_nndku")]
+transform = Transform3D(-4.371139e-08, -1.0000001, 0, 1, -4.3711392e-08, 0, 0, 0, 1.0000001, -3.9420977, 0.4431497, 3.2431264)
+face = "down"
+
+[node name="DominoBlock6" parent="TableSpace" instance=ExtResource("2_nndku")]
+transform = Transform3D(-4.371139e-08, -1.0000001, 0, 1, -4.3711392e-08, 0, 0, 0, 1.0000001, 0.15045786, 0.4431497, 3.2431264)
+face = "down"
+
+[node name="DominoBlock7" parent="TableSpace" instance=ExtResource("2_nndku")]
+transform = Transform3D(-4.371139e-08, -1.0000001, 0, 1, -4.3711392e-08, 0, 0, 0, 1.0000001, 4.2430105, 0.4431497, 3.2431264)
+face = "down"
+
+[node name="DominoBlock8" parent="TableSpace" instance=ExtResource("2_nndku")]
+transform = Transform3D(1.9106855e-15, 4.3711392e-08, 1.0000001, 1, -4.3711392e-08, 0, 4.371139e-08, 1.0000001, -4.3711392e-08, 7.372611, 0.4431497, 2.2801728)
+face = "down"
+
+[node name="DominoBlock9" parent="TableSpace" instance=ExtResource("2_nndku")]
+transform = Transform3D(1.9106855e-15, 4.3711392e-08, 1.0000001, 1, -4.3711392e-08, 0, 4.371139e-08, 1.0000001, -4.3711392e-08, 7.372611, 0.4431497, -1.8123808)
+
+[node name="DominoBlock10" parent="TableSpace" instance=ExtResource("2_nndku")]
+transform = Transform3D(1.9106855e-15, 4.3711392e-08, 1.0000001, 1, -4.3711392e-08, 0, 4.371139e-08, 1.0000001, -4.3711392e-08, -7.0716944, 0.4431497, 2.2801728)
+face = "down"
+
+[node name="DominoBlock11" parent="TableSpace" instance=ExtResource("2_nndku")]
+transform = Transform3D(1.9106855e-15, 4.3711392e-08, 1.0000001, 1, -4.3711392e-08, 0, 4.371139e-08, 1.0000001, -4.3711392e-08, -7.0716944, 0.4431497, -1.8123808)
+
+[node name="DominoBlock12" parent="TableSpace" instance=ExtResource("2_nndku")]
+transform = Transform3D(-4.371139e-08, -1.0000001, 0, 1, -4.3711392e-08, 0, 0, 0, 1.0000001, -6.096218, 0.9029691, 3.217681)
+face = "down"
+
+[node name="DominoBlock13" parent="TableSpace" instance=ExtResource("2_nndku")]
+transform = Transform3D(-4.371139e-08, -1.0000001, 0, 1, -4.3711392e-08, 0, 0, 0, 1.0000001, -2.0967636, 0.9029691, 3.217681)
+face = "down"
+
+[node name="DominoBlock14" parent="TableSpace" instance=ExtResource("2_nndku")]
+transform = Transform3D(-4.371139e-08, -1.0000001, 0, 1, -4.3711392e-08, 0, 0, 0, 1.0000001, 2.097784, 0.9029691, 3.217681)
+face = "down"
+
+[node name="DominoBlock15" parent="TableSpace" instance=ExtResource("2_nndku")]
+transform = Transform3D(-4.371139e-08, -1.0000001, 0, 1, -4.3711392e-08, 0, 0, 0, 1.0000001, 6.0972385, 0.9029691, 3.217681)
+face = "down"
+
+[node name="DominoBlock16" parent="TableSpace" instance=ExtResource("2_nndku")]
+transform = Transform3D(1.9106855e-15, 4.3711392e-08, 1.0000001, 1, -4.3711392e-08, 0, 4.371139e-08, 1.0000001, -4.3711392e-08, 1.0988107, 0.9029691, -2.619724)
+face = "down"
+
+[node name="DominoBlock17" parent="TableSpace" instance=ExtResource("2_nndku")]
+transform = Transform3D(1.9106855e-15, 4.3711392e-08, 1.0000001, 1, -4.3711392e-08, 0, 4.371139e-08, 1.0000001, -4.3711392e-08, -1.0688262, 0.9029691, -2.619724)
+face = "down"
+
+[node name="DominoBlock18" parent="TableSpace" instance=ExtResource("2_nndku")]
+transform = Transform3D(-4.371139e-08, -1.0000001, 0, 1, -4.3711392e-08, 0, 0, 0, 1.0000001, -4.090069, 1.3585408, 3.1625242)
+
+[node name="DominoBlock19" parent="TableSpace" instance=ExtResource("2_nndku")]
+transform = Transform3D(-4.371139e-08, -1.0000001, 0, 1, -4.3711392e-08, 0, 0, 0, 1.0000001, 4.102066, 1.3585408, 3.1625242)
+
+[node name="DominoBlock20" parent="TableSpace" instance=ExtResource("2_nndku")]
+transform = Transform3D(-4.371139e-08, -1.0000001, 0, 1, -4.3711392e-08, 0, 0, 0, 1.0000001, -0.031929016, 1.3585408, -3.4920342)
+face = "down"
+
+[node name="DominoBlock21" parent="TableSpace" instance=ExtResource("2_nndku")]
+transform = Transform3D(-4.371139e-08, -1.0000001, 0, 1, -4.3711392e-08, 0, 0, 0, 1.0000001, -0.031929016, 1.3585408, -1.5577805)
+face = "down"
+
+[node name="DominoBlock22" parent="TableSpace" instance=ExtResource("2_nndku")]
+transform = Transform3D(1.9106855e-15, 4.3711392e-08, 1.0000001, 1, -4.3711392e-08, 0, 4.371139e-08, 1.0000001, -4.3711392e-08, -0.031929016, 1.8234973, -2.5651867)
